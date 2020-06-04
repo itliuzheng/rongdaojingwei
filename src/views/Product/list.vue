@@ -141,87 +141,24 @@
 		</div>
 
 		<template v-else>
-			<div class="infinite-list" ref="infiniteBox" style="overflow:auto">
-				<div v-infinite-scroll="load" :infinite-scroll-immediate="false"
-						 :infinite-scroll-disabled="disabled"
-						 infinite-scroll-distance="1">
-					<el-card class="box-card" v-for="(item,index) in tableData" :key="item.id">
-						<div slot="header" class="clearfix">
-							<el-button @click.native.prevent="check(item)" type="text" size="small">
-								查看
-							</el-button>
-							<el-button @click.native.prevent="edit(item)" type="text" size="small" v-if="role === 'super'">
-								修改
-							</el-button>
-							<el-button @click.native.prevent="del(item)" type="text" size="small" v-if="role === 'super'">
-								删除
-							</el-button>
-							<!-- <el-button @click.native.prevent="up(item)" type="text" size="small" v-if="item.status===1&&role === 'super'">
-								上架
-							</el-button>
-							<el-button @click.native.prevent="down(item)" type="text" size="small" v-if="item.status===2" style='color:red'>
-								下架
-							</el-button> -->
-						</div>
-						<el-row :gutter="20" class="card-list">
-							<el-col :span="24" class="clearfix">
-								<p class="fl">产品ID:</p>
-								<p class="fr">{{item.id}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix">
-								<p class="fl">产品名称:</p>
-								<p class="fr">{{item.name}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix">
-								<p class="fl">产品类型:</p>
-								<p class="fr">{{formatterList(item.ptype,productType)}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">产品提供方:</p>
-								<p class="fr">{{item.provider}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">额度范围（万）:</p>
-								<p class="fr">{{ item.amountLower }}-{{ item.amountUpper }}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">期限范围（月）:</p>
-								<p class="fr">{{ item.deadlineLower }}-{{ item.deadlineUpper }}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">利率范围:</p>
-								<p class="fr">{{ item.rateLower }}-{{ item.rateUpper }}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">状态:</p>
-								<p class="fr">{{ item.status == 1?"下架":"上架" }}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">审批层级:</p>
-								<p class="fr">{{item.highestLevel == 1?"总后台":"一级管理员" }}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">创建时间:</p>
-								<p class="fr">{{item.createDate}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">更新时间:</p>
-								<p class="fr">{{item.updateDate}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p style="text-align: left; margin-bottom: 10px;">产品图片:</p>
-								<el-image :src="item.image" :fit="'fit'" :lazy="true"></el-image>
-							</el-col>
-						</el-row>
-					</el-card>
-				</div>
+			<list-scroll :tableData="tableData"
+						 @refreshScroll="refreshLoad"
+						 @loadScroll="loadStart" ></list-scroll>
 
-				<p v-if="loading">加载中...</p>
-				<p v-if="tableData.length == 0">暂无数据</p>
-				<template v-else>
-					<p v-if="noMore">没有更多了</p>
-				</template>
-			</div>
+
+			<!--<div class="infinite-list" ref="infiniteBox" style="overflow:auto">-->
+				<!--<div v-infinite-scroll="load" :infinite-scroll-immediate="false"-->
+						 <!--:infinite-scroll-disabled="disabled"-->
+						 <!--infinite-scroll-distance="1">-->
+				<!--</div>-->
+
+				<!--<p v-if="loading">加载中...</p>-->
+				<!--<p v-if="tableData.length == 0">暂无数据</p>-->
+				<!--<template v-else>-->
+					<!--<p v-if="noMore">没有更多了</p>-->
+				<!--</template>-->
+			<!--</div>-->
+
 		</template>
 
 
@@ -235,8 +172,11 @@
 	import { productPage, productLower, productUpper, productDelete } from '@/api/req'
 	import loadSet from '@/views/Product/loadSet.vue'
 	import { status, productType, formatter } from "@/api/common"
+    import ListScroll from "./listScroll";
+	import Bus from '@/unit/bus.js'
+
 	export default {
-		components:{ loadSet },
+		components:{ListScroll, loadSet },
 		data() {
 			return {
 			    loading: false,
@@ -293,10 +233,33 @@
 				this.filterData.pageNum = val
 				this.sendReq();
 			},
-			load() {
-			    this.loading = true;
+			refreshLoad(done) {
+			    this.filterData.pageNum = 1;
+			    this.sendReqMobile(done);
+			},
+			loadStart(done) {
+			    console.log(this.noMore);
+			    if(this.noMore){
+			        Bus.$emit('loadEnd',this.noMore);
+			        return ;
+				}
 				this.filterData.pageNum ++;
-				this.sendReq();
+			    this.sendReqMobile(done);
+
+				// this.sendReq();
+			},
+			handleLoadStart(vm, dom, done){
+				console.log(vm);
+				console.log(dom);
+			    setTimeout(() => {
+					const random = Math.floor(Math.random() * 2) + 1;
+					if (random == 1) {
+					  this.noData = true;
+					} else {
+					  this.noData = false;
+					}
+					done();
+				  }, 600);
 			},
 			formatterType(row, column){
 				
@@ -306,20 +269,48 @@
 				var _this = this;
 				productPage(this.filterData).then(res => {
 					//console.log(res)
-
 					if(_this.device === 'mobile'){
 						_this.loading = false;
 						if(_this.filterData.pageNum == 1){
-							_this.$set(_this,'tableData',res.data.records);
+						    _this.$nextTick(()=>{
+						        _this.$set(_this,'tableData',res.data.records);
+							});
 						}else{
 						    let totalData = _this.tableData.concat(res.data.records);
-							_this.$set(_this,'tableData',totalData);
+						    _this.$nextTick(()=>{
+						        _this.$set(_this,'tableData',totalData);
+							});
 						}
 						_this.total = res.data.total;
 					}else{
 						_this.tableData = res.data.records;
 						_this.total = res.data.total;
 					}
+
+				}).catch(res => {
+					this.$message.error(res.msg);
+				})
+			},
+			sendReqMobile(done) {
+				var _this = this;
+				productPage(this.filterData).then(res => {
+					if(_this.filterData.pageNum == 1){
+						_this.$nextTick(()=>{
+							_this.$set(_this,'tableData',res.data.records);
+						});
+						if(typeof done === 'function'){
+						    Bus.$emit('refreshEnd',done);
+						}
+					}else{
+						let totalData = _this.tableData.concat(res.data.records);
+						_this.$nextTick(()=>{
+							_this.$set(_this,'tableData',totalData);
+						});
+						if(typeof done === 'function'){
+						    Bus.$emit('loadEnd',false);
+						}
+					}
+					_this.total = res.data.total;
 
 				}).catch(res => {
 					this.$message.error(res.msg);
@@ -338,7 +329,8 @@
 					pageNum: 1, //当前页码
 					pageSize: 10 //每页条数
 				};
-				this.$refs.infiniteBox.scrollTop=0;
+				// this.$refs.infiniteBox.scrollTop=0;
+				this.$set(this,'tableData',[]);
 				this.sendReq();
 			},
 			check(row){
