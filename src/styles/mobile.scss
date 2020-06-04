@@ -1,0 +1,30 @@
+.mobile{
+  .box-card{
+    margin-bottom: 20px;
+  }
+  .card-list .el-col{
+    line-height: 1.2;
+    padding: 10px 0;
+  }
+  .infinite-list{
+    height: 400px;
+  }
+
+  .box-card p{
+    text-align: left;
+    color: #303133;
+  }
+  .box-card .fl{
+      max-width: 50%;
+      text-align: left;
+  }
+  .box-card .fr{
+    max-width: 50%;
+    text-align: right;
+    overflow-wrap:break-word;
+  }
+}
+.el-message-box{
+  width: auto;
+  max-width: 420px;
+}
