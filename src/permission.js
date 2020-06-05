@@ -15,6 +15,7 @@ function hasPermission(roles,permissionRoles){
 const whiteList = ['/Login','/home'];   //不重新定向白名单
 router.beforeEach((to, from, next) => {
 	//NProgress.start()   //开启进度条
+
 	if(store.state.token){           //判断是否有token
 		if(to.path === '/Login'){
 			next({path:'/'})
@@ -23,7 +24,7 @@ router.beforeEach((to, from, next) => {
 				store.dispatch('GetInfo').then(res =>{
 					let roles = [];
 					roles[0] = res.data.englishName
-					//const roles = ['admin'];						//登录的角色对应的角色组
+					// const roles = ['admin'];						//登录的角色对应的角色组
 					store.dispatch('GeneraterRouters',{roles}).then(() => {    //生成可访问的路由表
 						router.addRoutes(store.state.addRouters)	// 动态添加可访问路由表
 						next({...to})					// hack方法 确保addRoutes已完成
@@ -51,6 +52,8 @@ router.beforeEach((to, from, next) => {
 			// ps：history模式下无问题，可删除该行！
 		}
 	}
+
+
 });
 
 router.afterEach(() => {

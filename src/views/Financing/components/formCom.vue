@@ -272,7 +272,6 @@
 		},
 		methods: {
 			changeRadio(val){
-				//console.log(val)
 				this.$refs.addForm.clearValidate();
 			},
 			submitForm() {

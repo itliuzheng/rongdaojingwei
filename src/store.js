@@ -24,7 +24,7 @@ export default new Vuex.Store({
 			withoutAnimation:false,
 		},
 		siderBar_routers: [],
-		device: 'desktop',
+		device: 'desktop'
 	},
 	mutations: {
 		//设置token
@@ -124,8 +124,6 @@ export default new Vuex.Store({
 				resolve()
 			})
 		},
-
-
 		// 前端 登出
 		FedLogOut({commit}){
 			return new Promise(resolve => {

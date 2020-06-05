@@ -56,14 +56,14 @@
 		methods: {
 			look($event){
 				//console.log($event)
-				this.formData = $event.row
-				this.dialogCom = true
+				this.formData = $event;
+				this.dialogCom = true;
 				this.lookOrReview = 1
 			},
 			verify($event){
 				//console.log(2222222)
-				this.formData = $event.row
-				this.dialogCom = true
+				this.formData = $event;
+				this.dialogCom = true;
 				this.lookOrReview = 2
 			},
 			close(){
@@ -76,13 +76,13 @@
 			
 			lookPer($event){
 				//console.log($event)
-				this.formData = $event
-				this.dialogPer = true
+				this.formData = $event;
+				this.dialogPer = true;
 				this.lookOrReview = 1
 			},
 			verifyPer($event){
-				this.dialogPer = true
-				this.formData = $event
+				this.dialogPer = true;
+				this.formData = $event;
 				this.lookOrReview = 2
 			},
 			reviewOkPer(){

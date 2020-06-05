@@ -1,6 +1,6 @@
 <template>
   <div class="pr-wrap">
-    <div  v-if="tableData.length == 0" class="wrap-part">
+    <div  v-if="tableData.length != 0" class="wrap-part">
       <vue-scroll
         ref="vs"
         :ops="ops"
@@ -10,77 +10,79 @@
         @load-start="handleLoadStart"
       >
         <template v-for="(item,index) in tableData">
-          <el-card class="box-card" shadow="never">
+
+            <el-card shadow="never"  class="box-card" :key="item.number">
                 <div slot="header" class="clearfix">
                     <el-button @click.native.prevent="check(item)" type="text" size="small">
                         查看
                     </el-button>
-                    <el-button @click.native.prevent="edit(item)" type="text" size="small" v-if="role === 'super'">
-                        修改
+                    <el-button @click.native.prevent="review(item)" type="text" size="small" v-if='reviewButton'>
+                        审核
                     </el-button>
-                    <el-button @click.native.prevent="del(item)" type="text" size="small" v-if="role === 'super'">
+                    <el-button @click.native.prevent="reviewLog(item)" type="text" size="small" v-if='reviewLogButton'>
+                        查看审核记录
+                    </el-button>
+                    <el-button @click.native.prevent="deleteLog(item)" type="text" size="small" v-if='deleteLogButton'>
                         删除
                     </el-button>
-                    <!-- <el-button @click.native.prevent="up(item)" type="text" size="small" v-if="item.status===1&&role === 'super'">
-                        上架
-                    </el-button>
-                    <el-button @click.native.prevent="down(item)" type="text" size="small" v-if="item.status===2" style='color:red'>
-                        下架
-                    </el-button> -->
                 </div>
                 <el-row :gutter="20" class="card-list">
                     <el-col :span="24" class="clearfix">
-                        <p class="fl">产品ID:</p>
-                        <p class="fr">{{item.id}}</p>
+                        <p class="fl">融资编号:</p>
+                        <p class="fr">{{item.number}}</p>
                     </el-col>
-                    <el-col :span="24" class="clearfix">
-                        <p class="fl">产品名称:</p>
+                    <el-col :span="24" class="clearfix" v-if="userRole!='second'">
+                        <p class="fl">所属公司:</p>
                         <p class="fr">{{item.name}}</p>
                     </el-col>
-                    <el-col :span="24" class="clearfix">
-                        <p class="fl">产品类型:</p>
-                        <p class="fr">{{formatterList(item.ptype)}}</p>
+                    <el-col :span="24" class="clearfix" v-if="userRole!='second'">
+                        <p class="fl">所属部门:</p>
+                        <p class="fr">{{item.officeName}}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
-                        <p class="fl">产品提供方:</p>
-                        <p class="fr">{{item.provider}}</p>
+                        <p class="fl">所属客户经理:</p>
+                        <p class="fr">{{item.manageName}}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
-                        <p class="fl">额度范围（万）:</p>
-                        <p class="fr">{{ item.amountLower }}-{{ item.amountUpper }}</p>
+                        <p class="fl">企业名称:</p>
+                        <p class="fr">{{item.companyName}}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
-                        <p class="fl">期限范围（月）:</p>
-                        <p class="fr">{{ item.deadlineLower }}-{{ item.deadlineUpper }}</p>
+                        <p class="fl">所属行业:</p>
+                        <p class="fr">{{item.industry}}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
-                        <p class="fl">利率范围:</p>
-                        <p class="fr">{{ item.rateLower }}-{{ item.rateUpper }}</p>
+                        <p class="fl">贷款产品:</p>
+                        <p class="fr">{{item.productName}}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
-                        <p class="fl">状态:</p>
-                        <p class="fr">{{ item.status == 1?"下架":"上架" }}</p>
+                        <p class="fl">申请额度（万）:</p>
+                        <p class="fr">{{item.amount}}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
-                        <p class="fl">审批层级:</p>
-                        <p class="fr">{{item.highestLevel == 1?"总后台":"一级管理员" }}</p>
+                        <p class="fl">贷款用途:</p>
+                        <p class="fr">{{item.useFunds}}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
-                        <p class="fl">创建时间:</p>
-                        <p class="fr">{{item.createDate}}</p>
+                        <p class="fl">申请期限（月）:</p>
+                        <p class="fr">{{item.deadline}}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
-                        <p class="fl">更新时间:</p>
-                        <p class="fr">{{item.updateDate}}</p>
+                        <p class="fl">申请时间:</p>
+                        <p class="fr">{{item.applyDate}}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
-                        <p style="text-align: left; margin-bottom: 10px;">产品图片:</p>
-                        <el-image :src="item.image" :fit="'fit'" ></el-image>
+                        <p class="fl">企业联系人:</p>
+                        <p class="fr">{{item.name}}</p>
+                    </el-col>
+                    <el-col :span="24" class="clearfix" >
+                        <p class="fl">联系方式:</p>
+                        <p class="fr">{{item.mobile}}</p>
                     </el-col>
                 </el-row>
             </el-card>
         </template>
-        <div class="placeholder_height"></div>
+          <div class="placeholder_height"></div>
         <div
           slot="load-beforeDeactive"
           v-if="noData"
@@ -111,13 +113,18 @@
 </template>
 
 <script>
-	import { productType, formatter } from "@/api/common"
 	import Bus from '@/unit/bus.js'
 export default {
   props: {
       tableData:{
           default:[]
-      }
+      },
+      userRole:{
+          default:'second'
+      },
+      reviewButton:{
+          default:false
+      },
   },
   data() {
     const ops = {
@@ -126,8 +133,6 @@ export default {
         pullRefresh: {
           enable: true
         },
-        // sizeStrategy:390,
-
         pushLoad: {
           enable: true,
           auto: true,
@@ -171,36 +176,38 @@ export default {
       }
     },
   methods: {
-    formatterList(val){
-        return formatter(val,productType)
-    },
+      check(row){
+          this.$emit('check',row);
+      },
+      review(row){
+          this.$emit('review',row);
+      },
+      reviewLog(row){
+          this.$emit('reviewLog',row);
+      },
+      deleteLog(row){
+          this.$emit('deleteLog',row);
+      },
     handleRS(vsInstance, refreshDom, done) {
-        console.log('刷新');
       let _this = this;
       _this.$emit('refreshScroll',done);
       done();
     },
     handleLoadStart(vm, dom, done) {
       let _this = this;
-      console.log('开始下拉1');
-
       _this.$emit('loadScroll',done);
         done();
     },
     handleLBD(vm, loadDom, done) {
         let _this = this;
-        console.log('上拉加载完成');
-
         Bus.$on('loadEnd',function (res) {
             _this.noData = res;
             done();
         })
     },
     handleRBD(vm, loadDom, done) {
-        console.log('下拉刷新完成');
         let _this = this;
         Bus.$on('refreshEnd',function () {
-            console.log('refreshEnd---',_this.isDown);
             _this.isDown += 1;
             done();
         })

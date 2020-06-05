@@ -26,7 +26,27 @@ export const constantRouterMap = [
 				component: () => import('@/views/Home.vue'),
 				meta: {title: '首页',icon: 'example'},
 			}]
-		}
+		},
+	//test
+	// {
+	// 	path: '/product',
+	// 	name: 'product',
+	// 	component: Layout,
+	// 	redirect: '/product/list',
+	// 	alwaysShow: true,
+	// 	meta: {title: '产品管理', icon: 'el-iconchanpin', role: ["super","first","second"]},
+	// 	children: [{
+	// 		path: 'list',
+	// 		name: 'list',
+	// 		component: () => import("@/views/Product/list.vue"),
+	// 		meta: {title: '产品大纲', icon: 'el-iconfuhao-dagangshu', role: ["super","first","second"]}
+	// 	},{
+	// 		path: 'loadSet',
+	// 		name: 'loadSet',
+	// 		component: () => import("@/views/Product/loadSet.vue"),
+	// 		meta: {title: '产品配置录入', icon: 'el-iconsystemConfigure', role: ["super"]}
+	// 	}]
+	// },
 ]
 
 

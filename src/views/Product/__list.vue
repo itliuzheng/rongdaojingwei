@@ -97,10 +97,12 @@
 			 class='zIndex9'>
 			</el-pagination>
 		</div>
+		<!--<div class="col-m-b-10" v-else>-->
+		<!--</div>-->
 
 
 		<template v-else>
-			<el-row ref="list_top" class="col-m-b-10" :gutter="20">
+			<el-row class="col-m-b-10" :gutter="20">
 				<el-col :span="12">
 					<el-select v-model="filterData.ptype" placeholder="请选择产品类型">
 						<el-option v-for="item in productType" :key="item.id" :label="item.name" :value="item.id">
@@ -139,9 +141,89 @@
 					<el-button type="success" @click="reset">重置</el-button>
 				</el-col>
 			</el-row>
-			<list-scroll :tableData="tableData"
-						 @refreshScroll="refreshLoad"
-						 @loadScroll="loadStart" ></list-scroll>
+
+			<div class="infinite-list" ref="infiniteBox" style="overflow:auto">
+				<div v-infinite-scroll="load" :infinite-scroll-immediate="false"
+						 :infinite-scroll-disabled="disabled">
+					<template v-for="(item,index) in tableData">
+					  <el-card class="box-card" >
+							<div slot="header" class="clearfix">
+								<el-button @click.native.prevent="check(item)" type="text" size="small">
+									查看
+								</el-button>
+								<el-button @click.native.prevent="edit(item)" type="text" size="small" v-if="role === 'super'">
+									修改
+								</el-button>
+								<el-button @click.native.prevent="del(item)" type="text" size="small" v-if="role === 'super'">
+									删除
+								</el-button>
+								<!-- <el-button @click.native.prevent="up(item)" type="text" size="small" v-if="item.status===1&&role === 'super'">
+									上架
+								</el-button>
+								<el-button @click.native.prevent="down(item)" type="text" size="small" v-if="item.status===2" style='color:red'>
+									下架
+								</el-button> -->
+							</div>
+							<el-row :gutter="20" class="card-list">
+								<el-col :span="24" class="clearfix">
+									<p class="fl">产品ID:</p>
+									<p class="fr">{{item.id}}</p>
+								</el-col>
+								<el-col :span="24" class="clearfix">
+									<p class="fl">产品名称:</p>
+									<p class="fr">{{item.name}}</p>
+								</el-col>
+								<el-col :span="24" class="clearfix">
+									<p class="fl">产品类型:</p>
+									<p class="fr">{{formatterList(item.ptype)}}</p>
+								</el-col>
+								<el-col :span="24" class="clearfix" >
+									<p class="fl">产品提供方:</p>
+									<p class="fr">{{item.provider}}</p>
+								</el-col>
+								<el-col :span="24" class="clearfix" >
+									<p class="fl">额度范围（万）:</p>
+									<p class="fr">{{ item.amountLower }}-{{ item.amountUpper }}</p>
+								</el-col>
+								<el-col :span="24" class="clearfix" >
+									<p class="fl">期限范围（月）:</p>
+									<p class="fr">{{ item.deadlineLower }}-{{ item.deadlineUpper }}</p>
+								</el-col>
+								<el-col :span="24" class="clearfix" >
+									<p class="fl">利率范围:</p>
+									<p class="fr">{{ item.rateLower }}-{{ item.rateUpper }}</p>
+								</el-col>
+								<el-col :span="24" class="clearfix" >
+									<p class="fl">状态:</p>
+									<p class="fr">{{ item.status == 1?"下架":"上架" }}</p>
+								</el-col>
+								<el-col :span="24" class="clearfix" >
+									<p class="fl">审批层级:</p>
+									<p class="fr">{{item.highestLevel == 1?"总后台":"一级管理员" }}</p>
+								</el-col>
+								<el-col :span="24" class="clearfix" >
+									<p class="fl">创建时间:</p>
+									<p class="fr">{{item.createDate}}</p>
+								</el-col>
+								<el-col :span="24" class="clearfix" >
+									<p class="fl">更新时间:</p>
+									<p class="fr">{{item.updateDate}}</p>
+								</el-col>
+								<el-col :span="24" class="clearfix" >
+									<p style="text-align: left; margin-bottom: 10px;">产品图片:</p>
+									<el-image :src="item.image" :fit="'fit'" ></el-image>
+								</el-col>
+							</el-row>
+						</el-card>
+					</template>
+				</div>
+				<p v-if="loading">加载中...</p>
+				<p v-if="tableData.length == 0">暂无数据</p>
+				<template v-else>
+					<p v-if="noMore">没有更多了</p>
+				</template>·
+			</div>
+
 		</template>
 
 
@@ -162,6 +244,7 @@
 		components:{ListScroll, loadSet },
 		data() {
 			return {
+			    loading: true,
 				role: this.$store.state.userInfo.roles[0],
 				tableData: [], //表格数据
 				status:status,
@@ -204,7 +287,7 @@
 			}
 		},
 		created() {
-		    this.sendReq();
+			this.sendReq();
 		},
 		methods: {
 			handleSizeChange(val) {
@@ -215,17 +298,22 @@
 				this.filterData.pageNum = val
 				this.sendReq();
 			},
-			refreshLoad() {
-			    this.filterData.pageNum = 1;
+			load() {
+				this.filterData.pageNum ++;
 				this.sendReq();
 			},
-			loadStart() {
-			    if(this.noMore){
-			        Bus.$emit('loadEnd',this.noMore);
-			        return ;
-				}
-				this.filterData.pageNum ++;
-			    this.sendReq();
+			handleLoadStart(vm, dom, done){
+				console.log(vm);
+				console.log(dom);
+			    setTimeout(() => {
+					const random = Math.floor(Math.random() * 2) + 1;
+					if (random == 1) {
+					  this.noData = true;
+					} else {
+					  this.noData = false;
+					}
+					done();
+				  }, 600);
 			},
 			formatterType(row, column){
 				
@@ -233,20 +321,18 @@
 			},
 			sendReq() {
 				var _this = this;
-
 				productPage(this.filterData).then(res => {
 					//console.log(res)
 					if(_this.device === 'mobile'){
+						_this.loading = false;
 						if(_this.filterData.pageNum == 1){
 						    _this.$nextTick(()=>{
 						        _this.$set(_this,'tableData',res.data.records);
-						        Bus.$emit('refreshEnd');
 							});
 						}else{
 						    let totalData = _this.tableData.concat(res.data.records);
 						    _this.$nextTick(()=>{
 						        _this.$set(_this,'tableData',totalData);
-						        Bus.$emit('loadEnd',false);
 							});
 						}
 						_this.total = res.data.total;
@@ -272,6 +358,8 @@
 					pageNum: 1, //当前页码
 					pageSize: 10 //每页条数
 				};
+				// this.$refs.infiniteBox.scrollTop=0;
+				this.$set(this,'tableData',[]);
 				this.sendReq();
 			},
 			check(row){
@@ -329,7 +417,8 @@
 		},
 		computed:{
 			device() {return this.$store.state.device;},
-			noMore () {return this.total <= this.tableData.length;}
+			noMore () {return this.total <= this.tableData.length;},
+			disabled () {return this.loading || this.noMore}
 		}
 	}
 </script>

@@ -306,7 +306,7 @@
 				homeChart(this.postData).then(res => {
 					this.passData = res.data.approveList;
 					//this.cancelData = res.data.refuseList;
-					this.$message.success(res.msg)
+					// this.$message.success(res.msg)
 				}).catch(res =>{
 					this.$message.error(res.msg)
 				})

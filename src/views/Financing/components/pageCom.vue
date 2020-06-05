@@ -1,122 +1,62 @@
 <template>
 	<div>
-		<el-row :gutter="20" v-if="device === 'desktop'">
-			<el-col :span="4">
+		<el-row :gutter="20">
+			<el-col :span="device === 'desktop'?'4':'12'">
 				<el-input v-model="filterData.number" placeholder="融资编号"></el-input>
 			</el-col>
-			<el-col :span="4">
+			<el-col :span="device === 'desktop'?'4':'12'">
 				<el-input v-model="filterData.manageName" placeholder="所属客户经理"></el-input>
 			</el-col>
-			<el-col :span="4">
+			<el-col :span="device === 'desktop'?'4':'12'">
 				<el-input v-model="filterData.companyName" placeholder="企业名称"></el-input>
 			</el-col>
-			<el-col :span="4">
+			<el-col :span="device === 'desktop'?'4':'12'">
 				<el-select v-model="filterData.industry" placeholder="所属行业/职业">
 					<el-option v-for="item in job" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
 				</el-select>
 			</el-col>
-			<el-col :span="4">
+			<el-col :span="device === 'desktop'?'4':'12'">
 				<el-select v-model="filterData.productId" placeholder="贷款产品">
 					<el-option v-for="item in proSelectData" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
 				</el-select>
 			</el-col>
-			<el-col :span="4">
+			<el-col :span="device === 'desktop'?'4':'12'">
 				<el-input v-model="filterData.amount" placeholder="申请额度(万)"></el-input>
 			</el-col>
-			<el-col :span="4">
+			<el-col :span="device === 'desktop'?'4':'12'">
 				<el-input v-model="filterData.useFunds" placeholder="资金用途"></el-input>
 			</el-col>
-			<el-col :span="4">
+			<el-col :span="device === 'desktop'?'4':'12'">
 				<el-input v-model="filterData.deadline" placeholder="申请期限（月）"></el-input>
 			</el-col>
-			<el-col :span="6">
+			<el-col :span="device === 'desktop'?'6':'12'">
 				<el-date-picker
+						style="width: 100%;"
 				  	v-model="filterData.applyDate"
 				  	type="date"
 				  	placeholder="申请时间"
 				   	value-format="timestamp">
 				</el-date-picker>
 			</el-col>
-			<!--<el-col :span="4" v-if="userRole!='second'">
+			<!--<el-col :span="device === 'desktop'?'4':'12'" v-if="userRole!='second'">
 				<el-select v-model="filterData.dept" placeholder="请选择公司">
 					<el-option v-for="item in department" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
 				</el-select>
 			</el-col>-->
-			<el-col :span="4" v-if="userRole!='second'">
+			<el-col :span="device === 'desktop'?'4':'12'" v-if="userRole!='second'">
 				<el-select v-model="filterData.dept" placeholder="请选择部门">
 					<el-option v-for="item in department" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
 				</el-select>
 			</el-col>
-			<el-col :span="6">
+			<el-col :span="device === 'desktop'?'6':'24'">
 				<el-button type="primary" @click="query">查询</el-button>
 				<el-button type="success" @click="reset">重置</el-button>
 			</el-col>
 		</el-row>
-		<template v-else>
-			<el-row :gutter="20">
-				<el-col :span="12">
-					<el-input v-model="filterData.number" placeholder="融资编号"></el-input>
-				</el-col>
-				<el-col :span="12">
-					<el-input v-model="filterData.manageName" placeholder="所属客户经理"></el-input>
-				</el-col>
-				<el-col :span="12">
-					<el-input v-model="filterData.companyName" placeholder="企业名称"></el-input>
-				</el-col>
-				<el-col :span="12">
-					<el-select v-model="filterData.industry" placeholder="所属行业/职业">
-						<el-option v-for="item in job" :key="item.id" :label="item.name" :value="item.id">
-						</el-option>
-					</el-select>
-				</el-col>
-				<el-col :span="12">
-					<el-select v-model="filterData.productId" placeholder="贷款产品">
-						<el-option v-for="item in proSelectData" :key="item.id" :label="item.name" :value="item.id">
-						</el-option>
-					</el-select>
-				</el-col>
-				<el-col :span="12">
-					<el-input v-model="filterData.amount" placeholder="申请额度(万)"></el-input>
-				</el-col>
-				<el-col :span="12">
-					<el-input v-model="filterData.useFunds" placeholder="资金用途"></el-input>
-				</el-col>
-				<el-col :span="12">
-					<el-input v-model="filterData.deadline" placeholder="申请期限（月）"></el-input>
-				</el-col>
-				<el-col :span="12" v-if="userRole!='second'">
-					<el-select v-model="filterData.dept" placeholder="请选择部门">
-						<el-option v-for="item in department" :key="item.id" :label="item.name" :value="item.id">
-						</el-option>
-					</el-select>
-				</el-col>
-				<!--<el-col :span="4" v-if="userRole!='second'">
-					<el-select v-model="filterData.dept" placeholder="请选择公司">
-						<el-option v-for="item in department" :key="item.id" :label="item.name" :value="item.id">
-						</el-option>
-					</el-select>
-				</el-col>-->
-				<el-col :span="12">
-					<el-date-picker
-							style="width: 100%;"
-						v-model="filterData.applyDate"
-						type="date"
-						placeholder="申请时间"
-						value-format="timestamp">
-					</el-date-picker>
-				</el-col>
-			</el-row>
-			<el-row :gutter="20">
-				<el-col :span="24">
-					<el-button  type="primary" mini @click="query">查询</el-button>
-					<el-button  type="success" @click="reset">重置</el-button>
-				</el-col>
-			</el-row>
-		</template>
 
 
 		<div v-if="device === 'desktop'">
@@ -164,106 +104,35 @@
 					</template>
 				</el-table-column>
 			</el-table>
-
 			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="filterData.pageNum"
 			 :page-sizes="[10, 15, 20, 30]" :page-size="filterData.pageSize" layout="total, sizes, prev, pager, next, jumper"
 			 :total="total" class='zIndex9'>
 			</el-pagination>
 		</div>
 		<template v-else>
-			<div class="infinite-list" ref="infiniteBox" style="overflow:auto">
-				<el-card v-infinite-scroll="load" :infinite-scroll-immediate="false"
-						 :infinite-scroll-disabled="disabled"
-						 infinite-scroll-distance="1"
-						 class="box-card" v-for="(item,index) in tableData" :key="item.number">
-					<div slot="header" class="clearfix">
-						<el-button @click.native.prevent="check(item)" type="text" size="small">
-							查看
-						</el-button>
-						<el-button @click.native.prevent="review(item)" type="text" size="small" v-if='reviewButton'>
-							审核
-						</el-button>
-						<el-button @click.native.prevent="reviewLog(item)" type="text" size="small" v-if='reviewLogButton'>
-							查看审核记录
-						</el-button>
-						<el-button @click.native.prevent="deleteLog(item)" type="text" size="small" v-if='deleteLogButton'>
-							删除
-						</el-button>
-					</div>
-					<el-row :gutter="20">
-						<el-col :span="24" class="clearfix">
-							<p class="fl">融资编号:</p>
-							<p class="fr">{{item.number}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" v-if="userRole!='second'">
-							<p class="fl">所属公司:</p>
-							<p class="fr">{{item.name}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" v-if="userRole!='second'">
-							<p class="fl">所属部门:</p>
-							<p class="fr">{{item.officeName}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">所属客户经理:</p>
-							<p class="fr">{{item.manageName}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">企业名称:</p>
-							<p class="fr">{{item.companyName}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">所属行业:</p>
-							<p class="fr">{{item.industry}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">贷款产品:</p>
-							<p class="fr">{{item.productName}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">申请额度（万）:</p>
-							<p class="fr">{{item.amount}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">贷款用途:</p>
-							<p class="fr">{{item.useFunds}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">申请期限（月）:</p>
-							<p class="fr">{{item.deadline}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">申请时间:</p>
-							<p class="fr">{{item.applyDate}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">企业联系人:</p>
-							<p class="fr">{{item.name}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">联系方式:</p>
-							<p class="fr">{{item.mobile}}</p>
-						</el-col>
-					</el-row>
-				</el-card>
-
-				<p v-if="loading">加载中...</p>
-				<p v-if="tableData.length == 0">暂无数据</p>
-				<template v-else>
-					<p v-if="noMore">没有更多了</p>
-				</template>
-			</div>
+			<page-com-scroll :tableData="tableData" :userRole="userRole" :reviewButton="reviewButton"
+						 @refreshScroll="refreshLoad"
+						 @loadScroll="loadStart"
+							 @check="check"
+							 @review="review"
+							 @reviewLog="reviewLog"
+							 @deleteLog="deleteLog"
+			></page-com-scroll>
 		</template>
 
 	</div>
 </template>
 
 <script>
+	import Bus from '@/unit/bus.js'
 	import {financingPage, sysOffice, proSelection, delPageLog } from '@/api/req'	
 	import { productType, formatter } from '@/api/common'
 	import job from '@/unit/job'
+    import PageComScroll from "../scrolls/pageComScroll";
 	export default {
 		name: 'componentPage',
-		props:['role', 'start', 'status', 'level', 'reviewButton', 'reviewLogButton','menuIndex','deleteLogButton'],
+        components: {PageComScroll},
+        props:['role', 'start', 'status', 'level', 'reviewButton', 'reviewLogButton','menuIndex','deleteLogButton'],
 		computed: {
 			_role: function (){
 				return this.role;
@@ -284,12 +153,10 @@
 				return this.reviewLogButton;
 			},*/
 			device() {return this.$store.state.device;},
-			noMore () {return this.total <= this.tableData.length;},
-			disabled () {return this.loading || this.noMore}
+			noMore () {return this.total <= this.tableData.length;}
 		},
 		data() {
 			return {
-			    loading: false,
 				tableData: [], //表格数据
 				productType: productType,
 				department:[],//部门可选数据
@@ -364,23 +231,30 @@
 					this.$message.error(res.msg);
 				})
 			},
-			load() {
-			    this.loading = true;
-				this.filterData.pageNum ++;
+			refreshLoad() {
+			    this.filterData.pageNum = 1;
 				this.sendReq();
+			},
+			loadStart() {
+			    if(this.noMore){
+			        Bus.$emit('loadEnd',this.noMore);
+			        return ;
+				}
+				this.filterData.pageNum ++;
+			    this.sendReq();
 			},
 			sendReq() {
 				//console.log(this.filterData)
 				financingPage(this.filterData).then(res => {
 					//console.log(res)
 					if(this.device === 'mobile'){
-						this.loading = false;
 						if(this.filterData.pageNum == 1){
 						    this.$set(this,'tableData',res.data.records);
+							Bus.$emit('refreshEnd');
 						}else{
 						    this.$set(this,'tableData',this.tableData.concat(res.data.records));
+							Bus.$emit('loadEnd',false);
 						}
-
 						this.total = res.data.total;
 					}else{
 						this.tableData = res.data.records;
@@ -420,9 +294,6 @@
 				if(this.userRole === 'super'){
 					this.$set(this.filterData,'highestLevel',1)
 				}
-
-				this.$set(this,'tableData',[]);
-				this.$refs.infiniteBox.scrollTop=0;
 				this.sendReq();
 			},
 			check(row){
@@ -439,7 +310,7 @@
 					this.$message.success(res.msg);
 					this.sendReq();
 				}).catch(err => {
-					this.$message.error(res.msg);
+					this.$message.error(err.msg);
 				})
 			}
 		}
