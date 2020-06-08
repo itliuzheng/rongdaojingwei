@@ -52,8 +52,9 @@ service.interceptors.response.use(
 					}
 				).then(() => {
 					store.dispatch('FedLogOut').then(() => {
-						// location.reload()		// 为了重新实例化vue-router对象 避免bug
-						router.push({path: '/Login' });
+						location.reload()		// 为了重新实例化vue-router对象 避免bug
+
+						// router.push({path: '/Login' });
 					})
 				})
 			}

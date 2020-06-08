@@ -57,57 +57,14 @@
 			</template>
 
 			<template v-else>
-				<div class="infinite-list" ref="infiniteBox" style="overflow:auto">
-					<el-card v-infinite-scroll="load" :infinite-scroll-immediate="false"
-							 :infinite-scroll-disabled="disabled"
-							 infinite-scroll-distance="1"
-							 class="box-card" v-for="(item,index) in tableData" :key="index">
-						<div slot="header" class="clearfix">
-							<el-button @click.native.prevent="del(item)" type="text" size="small">
-								删除
-							</el-button>
-							<el-button @click.native.prevent="update(item)" type="text" size="small">
-								修改
-							</el-button>
-						</div>
-						<el-row :gutter="20" class="card-list">
-							<el-col :span="24" class="clearfix">
-								<p class="fl">序号:</p>
-								<p class="fr">{{item.id}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix">
-								<p class="fl">用户账号:</p>
-								<p class="fr">{{item.loginName}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix">
-								<p class="fl">用户姓名:</p>
-								<p class="fr">{{item.realName}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">手机号:</p>
-								<p class="fr">{{item.mobile}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">邮箱:</p>
-								<p class="fr">{{item.email}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">所属机构:</p>
-								<p class="fr">{{item.officeName}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">创建人:</p>
-								<p class="fr">{{item.createName}}</p>
-							</el-col>
-						</el-row>
-					</el-card>
 
-					<p v-if="loading">加载中...</p>
-					<p v-if="tableData.length == 0">暂无数据</p>
-					<template v-else>
-						<p v-if="noMore">没有更多了</p>
-					</template>
-				</div>
+					<index-scroll :tableData="tableData" :key="'power'"
+								  :role="role"
+						 @refreshScroll="refreshLoad"
+						 @loadScroll="loadStart"
+						 @del="del"
+						 @update="update"></index-scroll>
+
 			</template>
 
 		</div>
@@ -135,7 +92,6 @@
 						<el-button type="" @click="add">新增用户</el-button>
 					</el-col>
 				</el-row>
-
 				<template v-if="device === 'desktop'">
 					<el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" border>
 						<el-table-column prop="id" label="序号" width="">
@@ -174,64 +130,15 @@
 					</el-pagination>
 				</template>
 				<template v-else>
-					<div class="infinite-list" ref="infiniteBox" style="overflow:auto">
-						<el-card v-infinite-scroll="load" :infinite-scroll-immediate="false"
-								 :infinite-scroll-disabled="disabled"
-								 infinite-scroll-distance="1"
-								 class="box-card" v-for="(item,index) in tableData" :key="index">
-							<div slot="header" class="clearfix">
-								<el-button @click.native.prevent="del(item)" type="text" size="small">
-									删除
-								</el-button>
-								<el-button @click.native.prevent="update(item)" type="text" size="small">
-									修改
-								</el-button>
-								<el-button @click.native.prevent="resetPass(item)" type="text" size="small">
-									密码重置
-								</el-button>
-							</div>
-							<el-row :gutter="20" class="card-list">
-								<el-col :span="24" class="clearfix">
-									<p class="fl">序号:</p>
-									<p class="fr">{{item.id}}</p>
-								</el-col>
-								<el-col :span="24" class="clearfix">
-									<p class="fl">用户账号:</p>
-									<p class="fr">{{item.loginName}}</p>
-								</el-col>
-								<el-col :span="24" class="clearfix">
-									<p class="fl">用户姓名:</p>
-									<p class="fr">{{item.realName}}</p>
-								</el-col>
-								<el-col :span="24" class="clearfix" >
-									<p class="fl">手机号:</p>
-									<p class="fr">{{item.mobile}}</p>
-								</el-col>
-								<el-col :span="24" class="clearfix" >
-									<p class="fl">邮箱:</p>
-									<p class="fr">{{item.email}}</p>
-								</el-col>
-								<el-col :span="24" class="clearfix" >
-									<p class="fl">所属机构:</p>
-									<p class="fr">{{item.officeName}}</p>
-								</el-col>
-								<el-col :span="24" class="clearfix" >
-									<p class="fl">下属数量:</p>
-									<p class="fr">{{item.secondaryCount}}</p>
-								</el-col>
-								<el-col :span="24" class="clearfix" >
-									<p class="fl">创建人:</p>
-									<p class="fr">{{item.createName}}</p>
-								</el-col>
-							</el-row>
-						</el-card>
 
-						<p v-if="loading">加载中...</p>
-						<p v-if="tableData.length == 0">暂无数据</p>
-						<template v-else>
-							<p v-if="noMore">没有更多了</p>
-						</template>
-					</div>
+					<index-scroll :tableData="tableData" :key="'power'"
+								  :role="role"
+						 @refreshScroll="refreshLoad"
+						 @loadScroll="loadStart"
+						 @del="del"
+						 @update="update"
+						 @resetPass="resetPass"></index-scroll>
+
 				</template>
 
   			</el-tab-pane>
@@ -290,57 +197,13 @@
 					</el-pagination>
 				</template>
 				<template v-else>
-					<div class="infinite-list" ref="infiniteBoxSuperS" style="overflow:auto">
-						<el-card v-infinite-scroll="loadSuperS" :infinite-scroll-immediate="false"
-								 :infinite-scroll-disabled="disabledSuperS"
-								 infinite-scroll-distance="1"
-								 class="box-card" v-for="(item,index) in tableDataSuperS" :key="index">
-							<div slot="header" class="clearfix">
-								<!--<el-button @click.native.prevent="del(item)" type="text" size="small">-->
-									<!--删除-->
-								<!--</el-button>-->
-								<!--<el-button @click.native.prevent="update(item)" type="text" size="small">-->
-									<!--修改-->
-								<!--</el-button>-->
-							</div>
-							<el-row :gutter="20" class="card-list">
-								<el-col :span="24" class="clearfix">
-									<p class="fl">序号:</p>
-									<p class="fr">{{item.id}}</p>
-								</el-col>
-								<el-col :span="24" class="clearfix">
-									<p class="fl">用户账号:</p>
-									<p class="fr">{{item.loginName}}</p>
-								</el-col>
-								<el-col :span="24" class="clearfix">
-									<p class="fl">用户姓名:</p>
-									<p class="fr">{{item.realName}}</p>
-								</el-col>
-								<el-col :span="24" class="clearfix" >
-									<p class="fl">手机号:</p>
-									<p class="fr">{{item.mobile}}</p>
-								</el-col>
-								<el-col :span="24" class="clearfix" >
-									<p class="fl">邮箱:</p>
-									<p class="fr">{{item.email}}</p>
-								</el-col>
-								<el-col :span="24" class="clearfix" >
-									<p class="fl">所属机构:</p>
-									<p class="fr">{{item.officeName}}</p>
-								</el-col>
-								<el-col :span="24" class="clearfix" >
-									<p class="fl">创建人:</p>
-									<p class="fr">{{item.createName}}</p>
-								</el-col>
-							</el-row>
-						</el-card>
 
-						<p v-if="loadingSuperS">加载中...</p>
-						<p v-if="tableDataSuperS.length == 0">暂无数据</p>
-						<template v-else>
-							<p v-if="noMoreSuperS">没有更多了</p>
-						</template>
-					</div>
+					<index-scroll :tableData="tableDataSuperS" :key="'SuperS'"
+								  :role="role"
+									tableType="SuperS"
+						 @refreshScroll="refreshLoadSuperS"
+						 @loadScroll="loadStartSuperS"></index-scroll>
+
 				</template>
 
   			</el-tab-pane>
@@ -375,12 +238,12 @@
 						</el-form-item>
 					</el-col>
 					<el-col :span="device === 'desktop'?'12':'24'" v-if="role === 'super'">
-						<el-form-item label="角色" prop="email">
+						<el-form-item label="权限" prop="email">
 							<el-input disabled value="一级管理员"></el-input>
 						</el-form-item>
 					</el-col>					
 					<el-col :span="device === 'desktop'?'12':'24'" v-if="role === 'first'">
-						<el-form-item label="角色" prop="">
+						<el-form-item label="权限" prop="">
 							<el-input disabled value="二级管理员"></el-input>
 						</el-form-item>
 					</el-col>
@@ -404,11 +267,14 @@
 </template>
 
 <script>
+	import Bus from '@/unit/bus.js'
 	import { sysUserPage, sysUserAdd, sysUserDel, sysUserUpdate, pageSecondaryAll, resetFirstLevel } from '@/api/req'
 	import { roleType, formatter } from '@/api/common'
 	import { regPhone, noEmpty, regEmail } from '@/api/reg'
+    import IndexScroll from "./scrolls/indexScroll";
 	export default {
 		components: {
+            IndexScroll
 			//loadSet
 		},
 		data() {
@@ -434,8 +300,6 @@
 				}
 			}			
 			return {
-				loading: false,
-				loadingSuperS: false,
 				role: this.$store.state.userInfo.roles[0],
 				tableData: [], //表格数据
 				tableDataSuperS: [], //表格数据 
@@ -444,7 +308,7 @@
 					realName: '', //用户姓名
 					mobile: '', //手机号
 					email: '', //邮箱
-					//roleId: null, //角色
+					//roleId: null, //权限
 					officeName: '', //所属机构
 					pageNum: 1, //当前页码
 					pageSize: 10 //每页条数
@@ -456,7 +320,7 @@
 					realName: '', //用户姓名
 					mobile: '', //手机号
 					email: '', //邮箱
-					//roleId: null, //角色
+					//roleId: null, //权限
 					officeName: '', //所属机构
 					pageNum: 1, //当前页码
 					pageSize: 10 //每页条数
@@ -472,7 +336,7 @@
 					realName: '', //用户姓名
 					mobile: '', //手机号
 					email: '', //邮箱
-					//roleId: '', //角色
+					//roleId: '', //权限
 					officeName: '', //所属机构
 					//id:null,
 					secondaryCount: 5,//下属数量
@@ -550,24 +414,45 @@
 			handleClose(){
 				this.$refs.addForm.clearValidate();
 			},
-			load() {
-				this.loading = true;
-				this.filterData.pageNum ++;
+
+			refreshLoad() {
+			    this.filterData.pageNum = 1;
 				this.sendReq();
 			},
-			loadSuperS() {
-				this.loadingSuperS = true;
-				this.filterDataSuperS.pageNum ++;
+			loadStart() {
+			    if(this.noMore){
+			        Bus.$emit('loadEnd',this.noMore);
+			        return ;
+				}
+				this.filterData.pageNum ++;
+			    this.sendReq();
+			},
+
+
+			refreshLoadSuperS() {
+			    this.filterDataSuperS.pageNum = 1;
 				this.sendReqSuperS();
 			},
+			loadStartSuperS() {
+			    if(this.noMorePer){
+			        Bus.$emit('loadEndPer',this.noMorePer);
+			        return ;
+				}
+				this.filterDataSuperS.pageNum ++;
+			    this.sendReqSuperS();
+			},
+
+
+
 			sendReq() {
 				sysUserPage(this.filterData).then(res => {
 					if(this.device === 'mobile'){
-						this.loading = false;
 						if(this.filterData.pageNum == 1){
-							this.$set(this,'tableData',res.data.records);
+						    this.$set(this,'tableData',res.data.records);
+						    Bus.$emit('refreshEnd');
 						}else{
-							this.$set(this,'tableData',this.tableData.concat(res.data.records));
+						    this.$set(this,'tableData',this.tableData.concat(res.data.records));
+						    Bus.$emit('loadEnd',false);
 						}
 						this.total = res.data.total;
 					}else{
@@ -581,11 +466,12 @@
 			sendReqSuperS() {
 				pageSecondaryAll(this.filterDataSuperS).then(res => {
 					if(this.device === 'mobile'){
-						this.loadingSuperS = false;
 						if(this.filterDataSuperS.pageNum == 1){
 							this.$set(this,'tableDataSuperS',res.data.records);
+						    Bus.$emit('refreshEndSuperS');
 						}else{
 							this.$set(this,'tableDataSuperS',this.tableDataSuperS.concat(res.data.records));
+						    Bus.$emit('loadEndSuperS',false);
 						}
 						this.totalSuperS = res.data.total;
 					}else{
@@ -604,14 +490,12 @@
 					loginName: '', //用户账号
 					realName: '', //用户姓名
 					mobile: '', //手机号
-					roleId: '', //角色
+					roleId: '', //权限
 					officeName: '', //所属机构
 					//amount: [], //所属机构
 					pageNum: 1, //当前页码
 					pageSize: 10 //每页条数
 				};
-				this.$set(this,'tableData',[]);
-				this.$refs.infiniteBox.scrollTop=0;
 				this.sendReq();
 			},
 			querySuperS() {
@@ -622,14 +506,12 @@
 					loginName: '', //用户账号
 					realName: '', //用户姓名
 					mobile: '', //手机号
-					roleId: '', //角色
+					roleId: '', //权限
 					officeName: '', //所属机构
 					//amount: [], //所属机构
 					pageNum: 1, //当前页码
 					pageSize: 10 //每页条数
 				};
-				this.$set(this,'tableDataSuperS',[]);
-				this.$refs.infiniteBoxSuperS.scrollTop=0;
 				this.sendReqSuperS();
 			},
 			add(){
@@ -638,7 +520,7 @@
 					realName: '', //用户姓名
 					mobile: '', //手机号
 					email: '', //邮箱
-					roleId: '', //角色
+					roleId: '', //权限
 					officeName: '', //所属机构
 					secondaryCount: 5,//下属数量
 					//id:null,
@@ -696,7 +578,7 @@
 					realName: '', //用户姓名
 					mobile: '', //手机号
 					email: '', //邮箱
-					roleId: '', //角色
+					roleId: '', //权限
 					officeName: '', //所属机构
 					secondaryCount: 5,//下属数量
 					//id:null,
@@ -724,9 +606,7 @@
 		computed:{
 			device() {return this.$store.state.device;},
 			noMoreSuperS () {return this.total <= this.tableDataSuperS.length;},
-			disabledSuperS () {return this.loading || this.noMore},
 			noMore () {return this.total <= this.tableData.length;},
-			disabled () {return this.loading || this.noMore}
 		}
 	}
 </script>

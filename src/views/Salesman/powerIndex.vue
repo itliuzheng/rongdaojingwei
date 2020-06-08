@@ -47,42 +47,12 @@
 			</el-pagination>
 		</div>
 		<template v-else>
-			<div class="infinite-list" ref="infiniteBox" style="overflow:auto">
-				<el-card v-infinite-scroll="load" :infinite-scroll-immediate="false"
-						 :infinite-scroll-disabled="disabled"
-						 infinite-scroll-distance="1"
-						 class="box-card" v-for="(item,index) in tableData" :key="index">
-					<div slot="header" class="clearfix">
-						<el-button @click.native.prevent="setPower(item)" type="text" size="small">
-							设置权限
-						</el-button>
-					</div>
-					<el-row :gutter="20" class="card-list">
-						<el-col :span="24" class="clearfix">
-							<p class="fl">识别码:</p>
-							<p class="fr">{{item.coding}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix">
-							<p class="fl">业务员姓名:</p>
-							<p class="fr">{{item.name}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix">
-							<p class="fl">手机号:</p>
-							<p class="fr">{{item.mobile}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">邮箱:</p>
-							<p class="fr">{{item.email}}</p>
-						</el-col>
-					</el-row>
-				</el-card>
 
-				<p v-if="loading">加载中...</p>
-				<p v-if="tableData.length == 0">暂无数据</p>
-				<template v-else>
-					<p v-if="noMore">没有更多了</p>
-				</template>
-			</div>
+			<power-index-scroll :tableData="tableData" :key="'power'"
+						 @refreshScroll="refreshLoad"
+						 @loadScroll="loadStart"
+						 @setPower="setPower"></power-index-scroll>
+
 		</template>
 
 		<el-dialog title="权限" :visible.sync="dialogVisible" :width="device === 'desktop'?'70%':'100%'" :before-close="handleClose">
@@ -189,15 +159,17 @@
 </template>
 
 <script>
+	import Bus from '@/unit/bus.js'
 	import { salesmanPage, sysOffice, salesmanPro, salesmanAssign } from '@/api/req'
 	import { roleType, formatter } from '@/api/common'
+    import PowerIndexScroll from "./scrolls/powerIndexScroll";
 	export default {
 		components: {
+            PowerIndexScroll
 			//loadSet
 		},
 		data() {
 			return {
-				loading: false,
 				roleType: roleType,
 				department: [],
 				tableData: [], //表格数据
@@ -280,19 +252,29 @@
 				});
 				this.addDelPower.pids = arr;
 			},
-			load() {
-				this.loading = true;
+			refreshLoad() {
+				this.filterData.pageNum = 1;
+				this.sendReq();
+			},
+			loadStart() {
+				if(this.noMore){
+					Bus.$emit('loadEnd',this.noMore);
+					return ;
+				}
 				this.filterData.pageNum ++;
-				this.sendReqUser();
+				this.sendReq();
 			},
 			sendReqUser() {
+				var _this = this;
 				salesmanPage(this.filterData).then(res => {
 					if(this.device === 'mobile'){
-						this.loading = false;
-						if(this.filterData.pageNum == 1){
-							this.$set(this,'tableData',res.data.records);
+						if(_this.filterData.pageNum == 1){
+							_this.$set(_this,'tableData',res.data.records);
+							Bus.$emit('refreshEnd');
 						}else{
-							this.$set(this,'tableData',this.tableData.concat(res.data.records));
+							let totalData = _this.tableData.concat(res.data.records);
+							_this.$set(_this,'tableData',totalData);
+							Bus.$emit('loadEnd',false);
 						}
 						this.total = res.data.total;
 					}else{
@@ -315,8 +297,7 @@
 					pageNum: 1, //当前页码
 					pageSize: 10 //每页条数
 				}
-				this.$set(this,'tableData',[]);
-				this.$refs.infiniteBox.scrollTop=0;
+
 				this.sendReqUser();
 			},
 			sendReqPro() {				
@@ -379,8 +360,7 @@
 		},
 		computed:{
 			device() {return this.$store.state.device;},
-			noMore () {return this.total <= this.tableData.length;},
-			disabled () {return this.loading || this.noMore}
+			noMore () {return this.total <= this.tableData.length;}
 		}
 	}
 </script>

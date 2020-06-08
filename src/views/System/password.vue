@@ -21,7 +21,7 @@
 					<el-input type="text" v-model="userForm.newPasswordAgain" placeholder="确认密码 "/>
 				</el-form-item>	
 			</el-col>
-			<el-col :span="20">
+			<el-col :span="24">
 				<el-form-item>
 					<el-button type="primary" @click="sure">确定</el-button>
 					<el-button type="success" @click="reset">重置</el-button>

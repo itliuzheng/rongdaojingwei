@@ -9,73 +9,31 @@
         @refresh-before-deactivate="handleRBD"
         @load-start="handleLoadStart"
       >
+
         <template v-for="(item,index) in tableData">
-          <el-card class="box-card" shadow="never">
+            <el-card class="box-card" shadow="never">
                 <div slot="header" class="clearfix">
-                    <el-button @click.native.prevent="check(item)" type="text" size="small">
-                        查看
+                    <el-button @click.native.prevent="setPower(item)" type="text" size="small">
+                        设置权限
                     </el-button>
-                    <el-button @click.native.prevent="edit(item)" type="text" size="small" v-if="role === 'super'">
-                        修改
-                    </el-button>
-                    <el-button @click.native.prevent="del(item)" type="text" size="small" v-if="role === 'super'">
-                        删除
-                    </el-button>
-                    <!-- <el-button @click.native.prevent="up(item)" type="text" size="small" v-if="item.status===1&&role === 'super'">
-                        上架
-                    </el-button>
-                    <el-button @click.native.prevent="down(item)" type="text" size="small" v-if="item.status===2" style='color:red'>
-                        下架
-                    </el-button> -->
                 </div>
+
                 <el-row :gutter="20" class="card-list">
                     <el-col :span="24" class="clearfix">
-                        <p class="fl">产品ID:</p>
-                        <p class="fr">{{item.id}}</p>
+                        <p class="fl">识别码:</p>
+                        <p class="fr">{{item.coding}}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix">
-                        <p class="fl">产品名称:</p>
+                        <p class="fl">业务员姓名:</p>
                         <p class="fr">{{item.name}}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix">
-                        <p class="fl">产品类型:</p>
-                        <p class="fr">{{formatterList(item.ptype)}}</p>
+                        <p class="fl">手机号:</p>
+                        <p class="fr">{{item.mobile}}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
-                        <p class="fl">产品提供方:</p>
-                        <p class="fr">{{item.provider}}</p>
-                    </el-col>
-                    <el-col :span="24" class="clearfix" >
-                        <p class="fl">额度范围（万）:</p>
-                        <p class="fr">{{ item.amountLower }}-{{ item.amountUpper }}</p>
-                    </el-col>
-                    <el-col :span="24" class="clearfix" >
-                        <p class="fl">期限范围（月）:</p>
-                        <p class="fr">{{ item.deadlineLower }}-{{ item.deadlineUpper }}</p>
-                    </el-col>
-                    <el-col :span="24" class="clearfix" >
-                        <p class="fl">利率范围:</p>
-                        <p class="fr">{{ item.rateLower }}-{{ item.rateUpper }}</p>
-                    </el-col>
-                    <el-col :span="24" class="clearfix" >
-                        <p class="fl">状态:</p>
-                        <p class="fr">{{ item.status == 1?"下架":"上架" }}</p>
-                    </el-col>
-                    <el-col :span="24" class="clearfix" >
-                        <p class="fl">审批层级:</p>
-                        <p class="fr">{{item.highestLevel == 1?"总后台":"一级管理员" }}</p>
-                    </el-col>
-                    <el-col :span="24" class="clearfix" >
-                        <p class="fl">创建时间:</p>
-                        <p class="fr">{{item.createDate}}</p>
-                    </el-col>
-                    <el-col :span="24" class="clearfix" >
-                        <p class="fl">更新时间:</p>
-                        <p class="fr">{{item.updateDate}}</p>
-                    </el-col>
-                    <el-col :span="24" class="clearfix" >
-                        <p style="text-align: left; margin-bottom: 10px;">产品图片:</p>
-                        <el-image :src="item.image" :fit="'fit'" ></el-image>
+                        <p class="fl">邮箱:</p>
+                        <p class="fr">{{item.email}}</p>
                     </el-col>
                 </el-row>
             </el-card>
@@ -106,7 +64,8 @@
         </div>
       </vue-scroll>
     </div>
-      <div v-else class="no-data">暂无更多数据</div>
+
+    <div v-else class="no-data">暂无更多数据</div>
   </div>
 </template>
 
@@ -120,6 +79,7 @@ export default {
       }
   },
   data() {
+
     const ops = {
       vuescroll: {
         mode: 'slide',
@@ -161,6 +121,11 @@ export default {
         isDown:0
     };
   },
+    updated:function(){
+
+      console.log(this.tableData );
+      console.log(this.tableData.length );
+    },
   computed: {
   },
     watch:{
@@ -171,40 +136,33 @@ export default {
       }
     },
   methods: {
-    formatterList(val){
-        return formatter(val,productType)
+    setPower(row){
+      this.$emit('setPower',row);
     },
+
     handleRS(vsInstance, refreshDom, done) {
-        console.log('刷新');
       let _this = this;
       _this.$emit('refreshScroll',done);
       done();
     },
     handleLoadStart(vm, dom, done) {
       let _this = this;
-      console.log('开始下拉1');
-
       _this.$emit('loadScroll',done);
         done();
     },
     handleLBD(vm, loadDom, done) {
         let _this = this;
-        console.log('上拉加载完成');
-
         Bus.$on('loadEnd',function (res) {
             _this.noData = res;
             done();
         })
     },
     handleRBD(vm, loadDom, done) {
-        console.log('下拉刷新完成');
         let _this = this;
         Bus.$on('refreshEnd',function () {
-            console.log('refreshEnd---',_this.isDown);
             _this.isDown += 1;
             done();
         })
-
     }
   }
 };

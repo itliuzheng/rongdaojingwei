@@ -101,7 +101,7 @@
 						this.$store.dispatch('Login', this.loginForm).then(() => {
 							this.$message.success('登录成功');
 							this.loading = false;
-							this.$router.push({path: '/'});
+							this.$router.push({path: '/home'});
 						 }).catch(res => {
 							this.$message.error(res.msg);
 							this.loading = false;

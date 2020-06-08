@@ -111,90 +111,15 @@
 				</el-pagination>
 			</div>
 			<template v-else>
-
-				<div class="infinite-list" ref="infiniteBox" style="overflow:auto">
-					<el-card v-infinite-scroll="load" :infinite-scroll-immediate="false"
-							 :infinite-scroll-disabled="disabled"
-							 infinite-scroll-distance="1"
-							 class="box-card" v-for="(item,index) in tableData" :key="index">
-						<div slot="header" class="clearfix">
-							<!--<el-button @click.native.prevent="checkCom(item)" type="text" size="small" v-if="item.reviewStatus!=1">
-								查看
-							</el-button>-->
-							<el-button @click.native.prevent="reviewCom(item)" type="text" size="small" >
-								补录
-							</el-button>
-							<el-button @click.native.prevent="tijiaoCom(item)" type="text" size="small" >
-								提交
-							</el-button>
-							<el-button @click.native.prevent="delCom(item)" type="text" size="small">
-								删除
-							</el-button>
-							<!--<el-button @click.native.prevent="xiugaiCom(item)" type="text" size="small" v-if="item.reviewStatus===4">
-								修改
-							</el-button>-->
-						</div>
-
-						<el-row :gutter="20">
-							<el-col :span="24" class="clearfix">
-								<p class="fl">融资编号:</p>
-								<p class="fr">{{item.number}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" v-if="userRole!='second'">
-								<p class="fl">所属部门:</p>
-								<p class="fr">{{item.officeName}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">所属客户经理:</p>
-								<p class="fr">{{item.manageName}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">企业名称:</p>
-								<p class="fr">{{item.companyName}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">所属行业:</p>
-								<p class="fr">{{item.industry}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">贷款产品:</p>
-								<p class="fr">{{item.productName}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">申请额度（万）:</p>
-								<p class="fr">{{item.amount}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">贷款用途:</p>
-								<p class="fr">{{item.useFunds}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">申请期限（月）:</p>
-								<p class="fr">{{item.deadline}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">申请时间:</p>
-								<p class="fr">{{item.applyDate}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">企业联系人:</p>
-								<p class="fr">{{item.name}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">联系方式:</p>
-								<p class="fr">{{item.mobile}}</p>
-							</el-col>
-						</el-row>
-					</el-card>
-
-					<p v-if="loading">加载中...</p>
-
-					<p v-if="tableData.length == 0">暂无数据</p>
-					<template v-else>
-						<p v-if="noMore">没有更多了</p>
-					</template>
-				</div>
+				<bt-material-scroll :tableData="tableData" :key="'com'"
+									:userRole="userRole"
+						 @refreshScroll="refreshLoad"
+						 @loadScroll="loadStart"
+							 @reviewCom="reviewCom"
+							 @tijiaoCom="tijiaoCom"
+							 @delCom="delCom"></bt-material-scroll>
 			</template>
+
 			<el-dialog title="" :visible.sync="dialogCom" :width="device === 'desktop'?'70%':'100%'" v-if="dialogCom">
 				<el-form ref='addFormCom' :label-position="labelPosition" :label-width="device === 'desktop'?'180px':'80px'" :model="formDataCom" :rules='ruleCom'>
 					<el-row :gutter="20">
@@ -385,10 +310,10 @@
 					<el-input v-model="filterDataPer.manageName" placeholder="所属客户经理"></el-input>
 				</el-col>
 				<el-col :span="device === 'desktop'?'4':'12'">
-					<el-input v-model="filterDataPer.companyName" placeholder="企业名称"></el-input>
+					<el-input v-model="filterDataPer.companyName" placeholder="姓名"></el-input>
 				</el-col>
 				<el-col :span="device === 'desktop'?'4':'12'">
-					<el-select v-model="filterDataPer.industry" placeholder="所属行业/职业">
+					<el-select v-model="filterDataPer.industry" placeholder="职业">
 						<el-option v-for="item in job" :key="item.id" :label="item.name" :value="item.id">
 						</el-option>
 					</el-select>
@@ -481,87 +406,16 @@
 			</el-pagination>
 			</div>
 			<template v-else>
-				<div class="infinite-list" ref="infiniteBoxPer" style="overflow:auto">
-					<el-card v-infinite-scroll="loadPer" :infinite-scroll-immediate="false"
-							 :infinite-scroll-disabled="disabledPer"
-							 infinite-scroll-distance="1"
-							 class="box-card" v-for="(item,index) in tableDataPer" :key="index">
-						<div slot="header" class="clearfix">
-							<!--<el-button @click.native.prevent="checkPer(item)" type="text" size="small" v-if="item.reviewStatus!=1">
-								查看
-							</el-button>-->
-							<el-button @click.native.prevent="reviewPer(item)" type="text" size="small">
-								补录
-							</el-button>
-							<el-button @click.native.prevent="tijiaoPer(item)" type="text" size="small" >
-								提交
-							</el-button>
-							<el-button @click.native.prevent="delCom(item)" type="text" size="small">
-								删除
-							</el-button>
-							<!--<el-button @click.native.prevent="xiugaiPer(item)" type="text" size="small" v-if="item.reviewStatus===4">
-								修改
-							</el-button>-->
-						</div>
-						<el-row :gutter="20">
-							<el-col :span="24" class="clearfix">
-								<p class="fl">融资编号:</p>
-								<p class="fr">{{item.number}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" v-if="userRole!='second'">
-								<p class="fl">所属部门:</p>
-								<p class="fr">{{item.officeName}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">所属客户经理:</p>
-								<p class="fr">{{item.manageName}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">姓名:</p>
-								<p class="fr">{{item.name}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">联系方式:</p>
-								<p class="fr">{{item.mobile}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">户籍:</p>
-								<p class="fr">{{item.registerAddress}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">职业:</p>
-								<p class="fr">{{item.industry}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">申请时间:</p>
-								<p class="fr">{{item.applyDate}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">贷款产品:</p>
-								<p class="fr">{{item.productName}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">申请额度（万）:</p>
-								<p class="fr">{{item.amount}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">贷款用途:</p>
-								<p class="fr">{{item.useFunds}}</p>
-							</el-col>
-							<el-col :span="24" class="clearfix" >
-								<p class="fl">申请期限（月）:</p>
-								<p class="fr">{{item.deadline}}</p>
-							</el-col>
-						</el-row>
-					</el-card>
 
-					<p v-if="loadingPer">加载中...</p>
+				<bt-material-scroll :tableData="tableDataPer" :key="'per'"
+									tableType="per"
+									:userRole="userRole"
+						 @refreshScroll="refreshLoadPer"
+						 @loadScroll="loadStartPer"
+							 @reviewCom="reviewPer"
+							 @tijiaoCom="tijiaoPer"
+							 @delCom="delCom"></bt-material-scroll>
 
-					<p v-if="tableDataPer.length == 0">暂无数据</p>
-					<template v-else>
-						<p v-if="noMorePer">没有更多了</p>
-					</template>
-				</div>
 			</template>
 
 
@@ -712,12 +566,15 @@
 </template>
 
 <script>
+	import Bus from '@/unit/bus.js'
 	import { sysOffice, proSelection, supplementList, supplementSubmit, supplementInformation,delPageLog } from '@/api/req'
 	import { productType, formatter, reviewStatus, imgUpUrl } from '@/api/common'
 	import { getTokenStorage } from '@/api/cookies'
 	import job from '@/unit/job'
+    import BtMaterialScroll from "./scrolls/btMaterialScroll";
 	export default {
-		created(){
+        components: {BtMaterialScroll},
+        created(){
 			this.sendReq();
 			this.sendReqPer();
 			this.getOffice();
@@ -994,19 +851,19 @@
 		},
 		methods: {
 			sizeChange(val) {
-				this.filterData.pageSize = val
+				this.filterData.pageSize = val;
 				this.sendReq();
 			},
 			currentChange(val) {
-				this.filterData.pageNum = val
+				this.filterData.pageNum = val;
 				this.sendReq();
 			},
 			sizeChangePer(val) {
-				this.filterDataPer.pageSize = val
+				this.filterDataPer.pageSize = val;
 				this.sendReqPer();
 			},
 			currentChangePer(val) {
-				this.filterDataPer.pageNum = val
+				this.filterDataPer.pageNum = val;
 				this.sendReqPer();
 			},
 			selectionChangeCom(value) {
@@ -1064,16 +921,32 @@
 					this.$message.error(res.msg);
 				})
 			},
-			load() {
-			    this.loading = true;
-				this.filterData.pageNum ++;
+			refreshLoad() {
+			    this.filterData.pageNum = 1;
 				this.sendReq();
 			},
-			loadPer() {
-			    this.loadingPer = true;
-				this.filterDataPer.pageNum ++;
+			loadStart() {
+			    if(this.noMore){
+			        Bus.$emit('loadEnd',this.noMore);
+			        return ;
+				}
+				this.filterData.pageNum ++;
+			    this.sendReq();
+			},
+
+			refreshLoadPer() {
+			    this.filterDataPer.pageNum = 1;
 				this.sendReqPer();
 			},
+			loadStartPer() {
+			    if(this.noMorePer){
+			        Bus.$emit('loadEndPer',this.noMorePer);
+			        return ;
+				}
+				this.filterDataPer.pageNum ++;
+			    this.sendReqPer();
+			},
+
 			sendReq() {
 				supplementList(this.filterData).then(res => {
 					//console.log(res)
@@ -1081,8 +954,10 @@
 						this.loading = false;
 						if(this.filterData.pageNum == 1){
 						    this.$set(this,'tableData',res.data.records);
+						    Bus.$emit('refreshEnd');
 						}else{
 						    this.$set(this,'tableData',this.tableData.concat(res.data.records));
+						    Bus.$emit('loadEnd',false);
 						}
 						this.total = res.data.total;
 					}else{
@@ -1101,8 +976,10 @@
 						this.loadingPer = false;
 						if(this.filterDataPer.pageNum == 1){
 						    this.$set(this,'tableDataPer',res.data.records);
+						    Bus.$emit('refreshEndPer');
 						}else{
 						    this.$set(this,'tableDataPer',this.tableDataPer.concat(res.data.records));
+						    Bus.$emit('loadEndPer',false);
 						}
 						this.totalPer = res.data.total;
 					}else{
@@ -1140,8 +1017,6 @@
 					menuIndex:4,
 				}
 
-				this.$set(this,'tableData',[]);
-				this.$refs.infiniteBox.scrollTop=0;
 				this.sendReq();
 			},
 			resetPer() {
@@ -1163,8 +1038,6 @@
 					level: 1,
 					menuIndex:4,
 				}
-				this.$set(this,'tableDataPer',[]);
-				this.$refs.infiniteBoxPer.scrollTop=0;
 				this.sendReqPer();
 			},
 
@@ -1299,8 +1172,6 @@
 			device() {return this.$store.state.device;},
 			noMore () {return this.total <= this.tableData.length;},
 			noMorePer () {return this.total <= this.tableDataPer.length;},
-			disabled () {return this.loading || this.noMore},
-			disabledPer () {return this.loadingPer || this.noMorePer}
 		}
 	}	
 </script>

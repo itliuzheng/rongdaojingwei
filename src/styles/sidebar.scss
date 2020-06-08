@@ -125,12 +125,12 @@
         }
         .sidebar-container {
             transition: transform 0.28s;
-            width: 180px !important;
+            width: 250px !important;
         }
         &.hideSidebar {
             .sidebar-container {
                 transition-duration: 0.3s;
-                transform: translate3d(-180px, 0, 0);
+                transform: translate3d(-250px, 0, 0);
             }
         }
     }

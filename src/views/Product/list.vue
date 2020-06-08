@@ -152,11 +152,11 @@
 </template>
 
 <script>
+	import Bus from '@/unit/bus.js'
 	import { productPage, productLower, productUpper, productDelete } from '@/api/req'
 	import loadSet from '@/views/Product/loadSet.vue'
 	import { status, productType, formatter } from "@/api/common"
     import ListScroll from "./listScroll";
-	import Bus from '@/unit/bus.js'
 
 	export default {
 		components:{ListScroll, loadSet },

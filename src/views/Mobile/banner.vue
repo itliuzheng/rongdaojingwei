@@ -91,57 +91,12 @@
 		</div>
 
 		<template v-else>
-			<div class="infinite-list" ref="infiniteBox" style="overflow:auto">
-				<el-card v-infinite-scroll="load" :infinite-scroll-immediate="false"
-						 :infinite-scroll-disabled="disabled"
-						 infinite-scroll-distance="1"
-						 class="box-card" v-for="(item,index) in tableData" :key="item.id">
-					<div slot="header" class="clearfix">
-						<el-button @click.native.prevent="check(item)" type="text" size="small">
-							查看
-						</el-button>
-						<el-button @click.native.prevent="edit(item)" type="text" size="small">
-							修改
-						</el-button>
-					</div>
-					<el-row :gutter="20" class="card-list">
-						<el-col :span="24" class="clearfix">
-							<p class="fl">ID:</p>
-							<p class="fr">{{item.id}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix">
-							<p class="fl">标题:</p>
-							<p class="fr">{{item.title}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix">
-							<p class="fl">图片地址:</p>
-							<p class="fr">{{item.imgUrl}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">排序:</p>
-							<p class="fr">{{item.ordinal}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">状态:</p>
-							<p class="fr">{{ item.delFlag === 1? "有效" : "无效"  }}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">创建人:</p>
-							<p class="fr">{{ item.createUserName }}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">创建时间:</p>
-							<p class="fr">{{ item.createDate }}</p>
-						</el-col>
-					</el-row>
-				</el-card>
 
-				<p v-if="loading">加载中...</p>
-				<p v-if="tableData.length == 0">暂无数据</p>
-				<template v-else>
-					<p v-if="noMore">没有更多了</p>
-				</template>
-			</div>
+			<banner-scroll :tableData="tableData" :key="'power'"
+						 @refreshScroll="refreshLoad"
+						 @loadScroll="loadStart"
+						 @check="check"
+						 @edit="edit"></banner-scroll>
 		</template>
 
 		<el-dialog title="轮播图" :visible.sync="dialogVisible" :width="device === 'desktop'?'70%':'100%'" :before-close="handleClose">
@@ -262,13 +217,15 @@
 </template>
 
 <script>
+	import Bus from '@/unit/bus.js'
 	import { bannerPage, bannerAdd, bannerUpdate } from '@/api/req'
 	import { imgUpUrl } from '@/api/common'
 	import {getTokenStorage} from '@/api/cookies'
+    import BannerScroll from "./scrolls/bannerScroll";
 	export default {
-		data() {
+        components: {BannerScroll},
+        data() {
 			return {
-			    loading: false,
 				imgUpUrl: imgUpUrl,
 				fileList: [],
 				header:{
@@ -357,14 +314,29 @@
 			uploadSuccess(response, file, fileList){
 				this.addForm.imgUrl = response.data;
 			},
+			refreshLoad() {
+				this.filterData.pageNum = 1;
+				this.sendReq();
+			},
+			loadStart() {
+				if(this.noMore){
+					Bus.$emit('loadEnd',this.noMore);
+					return ;
+				}
+				this.filterData.pageNum ++;
+				this.sendReq();
+			},
 			sendReq() {
+				var _this = this;
 				bannerPage(this.filterData).then(res => {
 					if(this.device === 'mobile'){
-						this.loading = false;
-						if(this.filterData.pageNum == 1){
-						    this.$set(this,'tableData',res.data.records);
+						if(_this.filterData.pageNum == 1){
+							_this.$set(_this,'tableData',res.data.records);
+							Bus.$emit('refreshEnd');
 						}else{
-						    this.$set(this,'tableData',this.tableData.concat(res.data.records));
+							let totalData = _this.tableData.concat(res.data.records);
+							_this.$set(_this,'tableData',totalData);
+							Bus.$emit('loadEnd',false);
 						}
 						this.total = res.data.total;
 					}else{
@@ -388,8 +360,6 @@
 					pageNum: 1, //当前页码
 					pageSize: 10 //每页条数
 				}
-				this.$set(this,'tableData',[]);
-				this.$refs.infiniteBox.scrollTop=0;
 				this.sendReq();
 			},
 			addBanner(){				
@@ -453,8 +423,7 @@
 		},
 		computed:{
 			device(){ return this.$store.state.device },
-			noMore (){ return this.total <= this.tableData.length;},
-			disabled (){ return this.loading || this.noMore}
+			noMore (){ return this.total <= this.tableData.length;}
 		}
 	}
 </script>

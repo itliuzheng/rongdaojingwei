@@ -54,57 +54,11 @@
 		</div>
 
 		<template v-else>
-			<div class="infinite-list" ref="infiniteBox" style="overflow:auto">
-				<el-card v-infinite-scroll="load" :infinite-scroll-immediate="false"
-						 :infinite-scroll-disabled="disabled"
-						 infinite-scroll-distance="1"
-						 class="box-card" v-for="(item,index) in tableData" :key="index">
-					<div slot="header" class="clearfix">
-						<el-button @click.native.prevent="del(item)" type="text" size="small">
-							删除
-						</el-button>
-						<el-button @click.native.prevent="update(item)" type="text" size="small">
-							修改
-						</el-button>
-					</div>
-					<el-row :gutter="20" class="card-list">
-						<el-col :span="24" class="clearfix">
-							<p class="fl">识别码:</p>
-							<p class="fr">{{item.coding}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix">
-							<p class="fl">业务员姓名:</p>
-							<p class="fr">{{item.name}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix">
-							<p class="fl">手机号:</p>
-							<p class="fr">{{item.mobile}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">邮箱:</p>
-							<p class="fr">{{item.email}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">所属机构:</p>
-							<p class="fr">{{ item.officeName }}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">创建时间:</p>
-							<p class="fr">{{ item.createDate }}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">创建人:</p>
-							<p class="fr">{{ item.createName }}</p>
-						</el-col>
-					</el-row>
-				</el-card>
-
-				<p v-if="loading">加载中...</p>
-				<p v-if="tableData.length == 0">暂无数据</p>
-				<template v-else>
-					<p v-if="noMore">没有更多了</p>
-				</template>
-			</div>
+			<salesman-scroll :tableData="tableData" :key="'salesman'"
+						 @refreshScroll="refreshLoad"
+						 @loadScroll="loadStart"
+						 @del="del"
+						 @update="update"></salesman-scroll>
 		</template>
 
 		<el-dialog title="业务员" :visible.sync="dialogVisible" :width="device === 'desktop'?'70%':'100%'" @close="handleClose">
@@ -144,11 +98,14 @@
 </template>
 
 <script>
+	import Bus from '@/unit/bus.js'
 	import { salesmanPage, salesmanAdd, salesmanDelete, salesmanUpdate } from '@/api/req'
 		import { roleType, formatter } from '@/api/common'
 		import { regPhone, noEmpty, regEmail } from '@/api/reg'
+    import SalesmanScroll from "./scrolls/salesmanScroll";
 		export default {
 			components: {
+                SalesmanScroll
 				//loadSet
 			},
 			data() {
@@ -167,7 +124,6 @@
 					}
 				}			
 				return {
-					loading: false,
 					loginRole: this.$store.state.userInfo.roles[0],
 					tableData: [], //表格数据
 					filterData: { //请求条件
@@ -236,25 +192,38 @@
 				handleClose(){
 					this.$refs.addForm.clearValidate();
 				},
-				load() {
-					this.loading = true;
+
+				refreshLoad() {
+					this.filterData.pageNum = 1;
+					this.sendReq();
+				},
+				loadStart() {
+					if(this.noMore){
+						Bus.$emit('loadEnd',this.noMore);
+						return ;
+					}
 					this.filterData.pageNum ++;
 					this.sendReq();
 				},
+
 				sendReq() {
+					var _this = this;
 					salesmanPage(this.filterData).then(res => {
 						if(this.device === 'mobile'){
-							this.loading = false;
-							if(this.filterData.pageNum == 1){
-								this.$set(this,'tableData',res.data.records);
+							if(_this.filterData.pageNum == 1){
+								_this.$set(_this,'tableData',res.data.records);
+								Bus.$emit('refreshEnd');
 							}else{
-								this.$set(this,'tableData',this.tableData.concat(res.data.records));
+								let totalData = _this.tableData.concat(res.data.records);
+								_this.$set(_this,'tableData',totalData);
+								Bus.$emit('loadEnd',false);
 							}
 							this.total = res.data.total;
 						}else{
 							this.tableData = res.data.records;
 							this.total = res.data.total;
 						}
+
 					}).catch(res => {
 						this.$message.error(res.msg);
 					})
@@ -271,8 +240,6 @@
 						pageNum: 1, //当前页码
 						pageSize: 10 //每页条数
 					}
-					this.$set(this,'tableData',[]);
-					this.$refs.infiniteBox.scrollTop=0;
 					this.sendReq();
 				},
 				add(){
@@ -295,7 +262,7 @@
 					let post = {};
 					post.id =  scope.id;
 					salesmanDelete(post).then(res => {
-						this.$message.success('删除成功')
+						this.$message.success('删除成功');
 						this.sendReq();
 					}).catch(res => {
 						this.$message.error(res.msg)
@@ -343,8 +310,7 @@
 			},
 			computed:{
 				device() {return this.$store.state.device;},
-				noMore () {return this.total <= this.tableData.length;},
-				disabled () {return this.loading || this.noMore}
+				noMore () {return this.total <= this.tableData.length;}
 			}
 		}
 	</script>

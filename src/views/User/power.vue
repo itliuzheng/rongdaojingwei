@@ -59,46 +59,10 @@
 			</el-pagination>
 		</template>
 		<template v-else>
-			<div class="infinite-list" ref="infiniteBox" style="overflow:auto">
-				<el-card v-infinite-scroll="load" :infinite-scroll-immediate="false"
-						 :infinite-scroll-disabled="disabled"
-						 infinite-scroll-distance="1"
-						 class="box-card" v-for="(item,index) in tableData" :key="index">
-					<div slot="header" class="clearfix">
-						<el-button @click.native.prevent="setPower(item)" type="text" size="small">
-							设置权限
-						</el-button>
-					</div>
-					<el-row :gutter="20" class="card-list">
-						<el-col :span="24" class="clearfix">
-							<p class="fl">用户账号:</p>
-							<p class="fr">{{item.loginName}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix">
-							<p class="fl">用户姓名:</p>
-							<p class="fr">{{item.realName}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">手机号:</p>
-							<p class="fr">{{item.mobile}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">邮箱:</p>
-							<p class="fr">{{item.email}}</p>
-						</el-col>
-						<el-col :span="24" class="clearfix" >
-							<p class="fl">所属机构:</p>
-							<p class="fr">{{item.officeName}}</p>
-						</el-col>
-					</el-row>
-				</el-card>
-
-				<p v-if="loading">加载中...</p>
-				<p v-if="tableData.length == 0">暂无数据</p>
-				<template v-else>
-					<p v-if="noMore">没有更多了</p>
-				</template>
-			</div>
+			<power-scroll :tableData="tableData" :key="'power'"
+						 @refreshScroll="refreshLoad"
+						 @loadScroll="loadStart"
+						 @setPower="setPower"></power-scroll>
 		</template>
 		<el-dialog title="权限" :visible.sync="dialogVisible" :width="device === 'desktop'?'80%':'100%'" :before-close="handleClose">
 			<el-form :label-position="labelPosition" :label-width="device === 'desktop'?'180px':'80px'" :model="addFromData">
@@ -209,10 +173,13 @@
 </template>
 
 <script>
+	import Bus from '@/unit/bus.js'
 	import { sysUserPage, sysOffice, userPower, userPowerAssign } from '@/api/req'
 	import { roleType, formatter } from '@/api/common'
+    import PowerScroll from "./scrolls/powerScroll";
 	export default {
 		components: {
+            PowerScroll
 			//loadSet
 		},
 		data() {
@@ -302,19 +269,28 @@
 				});
 				this.addDelPower.pids = arr;
 			},
-			load() {
-				this.loading = true;
+
+			refreshLoad() {
+				this.filterData.pageNum = 1;
+				this.sendReqUser();
+			},
+			loadStart() {
+				if(this.noMore){
+					Bus.$emit('loadEnd',this.noMore);
+					return ;
+				}
 				this.filterData.pageNum ++;
 				this.sendReqUser();
 			},
 			sendReqUser() {
 				sysUserPage(this.filterData).then(res => {
 					if(this.device === 'mobile'){
-						this.loading = false;
 						if(this.filterData.pageNum == 1){
 							this.$set(this,'tableData',res.data.records);
+							Bus.$emit('refreshEnd');
 						}else{
 							this.$set(this,'tableData',this.tableData.concat(res.data.records));
+							Bus.$emit('loadEnd',false);
 						}
 						this.total = res.data.total;
 					}else{
@@ -339,8 +315,6 @@
 					pageNum: 1, //当前页码
 					pageSize: 10 //每页条数
 				}
-				this.$set(this,'tableData',[]);
-				this.$refs.infiniteBox.scrollTop=0;
 				this.sendReqUser();
 			},
 			sendReqPro() {				
@@ -403,8 +377,7 @@
 		},
 		computed:{
 			device() {return this.$store.state.device;},
-			noMore () {return this.total <= this.tableData.length;},
-			disabled () {return this.loading || this.noMore}
+			noMore () {return this.total <= this.tableData.length;}
 		}
 	}
 </script>
