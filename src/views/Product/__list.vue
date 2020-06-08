@@ -221,7 +221,7 @@
 				<p v-if="tableData.length == 0">暂无数据</p>
 				<template v-else>
 					<p v-if="noMore">没有更多了</p>
-				</template>·
+				</template>
 			</div>
 
 		</template>
