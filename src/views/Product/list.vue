@@ -55,7 +55,7 @@
 				<el-table-column prop="" label="期限范围（月）" show-overflow-tooltip width="120">
 					<template slot-scope="scope">{{ scope.row.deadlineLower }}-{{ scope.row.deadlineUpper }}</template>
 				</el-table-column>
-				<el-table-column prop="" label="利率范围" show-overflow-tooltip width="120">
+				<el-table-column prop="" label="利率范围(%/月)" show-overflow-tooltip width="120">
 					<template slot-scope="scope">{{ scope.row.rateLower }}-{{ scope.row.rateUpper }}</template>
 				</el-table-column>
 				<el-table-column prop="status" label="状态" show-overflow-tooltip width="120">
