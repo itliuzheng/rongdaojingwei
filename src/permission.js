@@ -12,7 +12,8 @@ function hasPermission(roles,permissionRoles){
 }
 
 //登录拦截
-const whiteList = ['/Login','/home'];   //不重新定向白名单
+// const whiteList = ['/Login','/home'];   //不重新定向白名单
+const whiteList = ['/Login'];   //不重新定向白名单
 router.beforeEach((to, from, next) => {
 	//NProgress.start()   //开启进度条
 

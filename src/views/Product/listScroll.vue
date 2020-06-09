@@ -54,7 +54,7 @@
                         <p class="fr">{{ item.deadlineLower }}-{{ item.deadlineUpper }}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
-                        <p class="fl">利率范围:</p>
+                        <p class="fl">利率范围(%/月):</p>
                         <p class="fr">{{ item.rateLower }}-{{ item.rateUpper }}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
@@ -117,6 +117,9 @@ export default {
   props: {
       tableData:{
           default:[]
+      },
+      role:{
+          default:null
       }
   },
   data() {
@@ -171,6 +174,15 @@ export default {
       }
     },
   methods: {
+    check(row){
+      this.$emit('check',row);
+    },
+    edit(row){
+      this.$emit('edit',row);
+    },
+    del(row){
+      this.$emit('del',row);
+    },
     formatterList(val){
         return formatter(val,productType)
     },

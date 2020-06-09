@@ -1,18 +1,19 @@
 <template>
 	<div>
-		<el-form v-if="device === 'desktop'" ref="addForm" :label-position="labelPosition" label-width="120px" :model="addFromData" :rules="addFromRules">
+		<el-form :class="device === 'mobile'?'mobile-el-form':''" ref="addForm" :label-position="labelPosition"
+				 :label-width="device === 'desktop'?'120px':'120px'" :model="addFromData" :rules="addFromRules">
 			<el-row :gutter="20">
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="产品名称" prop="name">
 						<el-input v-model="addFromData.name" :disabled="fromList===true&&checkOrEdit===1"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="产品提供方" prop="provider">
 						<el-input v-model="addFromData.provider" :disabled="fromList===true&&checkOrEdit===1"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="产品类型" prop="ptype">
 						<el-select v-model="addFromData.ptype" placeholder="请选择" :disabled="fromList===true&&checkOrEdit===1">
 							<el-option v-for="item in productType" :key="item.id" :label="item.name" :value="item.id">
@@ -20,7 +21,7 @@
 						</el-select>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="申请对象" prop="ptype">
 						<el-select v-model="addFromData.level" placeholder="请选择" :disabled="fromList===true&&checkOrEdit===1">
 							<el-option v-for="item in appilyType" :key="item.id" :label="item.name" :value="item.id">
@@ -28,7 +29,7 @@
 						</el-select>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="展业区域" prop="province">
 						<el-select v-model="addFromData.areaPath" multiple placeholder="全国" :disabled="fromList===true&&checkOrEdit===1">
 						 	<el-option
@@ -41,7 +42,7 @@
 						</el-select>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="产品链接" prop="pointStatus">
 						<el-radio-group v-model="addFromData.pointStatus">
 							<el-radio-button :label=1>可用</el-radio-button>
@@ -49,42 +50,42 @@
 						</el-radio-group>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12" v-if="addFromData.pointStatus === 1">
+				<el-col :span="device === 'desktop'?'12':'24'" v-if="addFromData.pointStatus === 1">
 					<el-form-item label="链接地址" prop="externalUrl">
 						<el-input v-model.number="addFromData.externalUrl" :disabled="fromList===true&&checkOrEdit===1"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="额度下限(万)" prop="amountLower">
 						<el-input v-model.number="addFromData.amountLower" :disabled="fromList===true&&checkOrEdit===1"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="额度上限(万)" prop="amountUpper">
 						<el-input v-model.number="addFromData.amountUpper" :disabled="fromList===true&&checkOrEdit===1"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="期限下限(月)" prop="deadlineLower">
 						<el-input v-model.number="addFromData.deadlineLower" :disabled="fromList===true&&checkOrEdit===1"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="期限上限(月)" prop="deadlineUpper">
 						<el-input v-model.number="addFromData.deadlineUpper" :disabled="fromList===true&&checkOrEdit===1"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="利率下限(%/月)" prop="rateLower">
 						<el-input v-model="addFromData.rateLower" :disabled="fromList===true&&checkOrEdit===1"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="利率上限(%/月)" prop="rateUpper">
 						<el-input v-model="addFromData.rateUpper" :disabled="fromList===true&&checkOrEdit===1"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12" v-if="!fromList||checkOrEdit===2">
+				<el-col :span="device === 'desktop'?'12':'24'" v-if="!fromList||checkOrEdit===2">
 					<el-form-item label="还款方式" prop="repayment">
 						<el-select v-model="returnPay" placeholder="请选择" @change='selectChange' :disabled="fromList===true&&checkOrEdit===1">
 							<el-option v-for="item in returnPayType" :key="item.id" :label="item.name" :value="item.id">
@@ -92,7 +93,7 @@
 						</el-select>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="审批层级" prop="highestLevel">
 						<el-select v-model="addFromData.highestLevel" placeholder="请选择审批层级" :disabled="fromList===true&&checkOrEdit===1">
 							<el-option v-for="item in highestLevelType" :key="item.id" :label="item.name" :value="item.id">
@@ -100,17 +101,17 @@
 						</el-select>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="还款方式"  v-if="returnPay=='其它'||checkOrEdit===1" prop="repayment">
 						<el-input v-model="addFromData.repayment" :disabled="fromList===true&&checkOrEdit===1"></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="12">
+				<el-col :span="device === 'desktop'?'12':'24'">
 					<el-form-item label="产品图片"   prop="image">
 						<el-input v-model="addFromData.image" disabled></el-input>
 					</el-form-item>
 				</el-col>
-				<el-col :span="18">
+				<el-col :span="device === 'desktop'?'18':'24'">
 					<el-form-item label="上传图片">
 						<el-upload
 							class="upload-demo"
@@ -168,175 +169,6 @@
 			</el-row>
 		</el-form>
 
-		<el-form v-else ref="addForm"
-				 class="mobile-el-form"
-				 :label-position="labelPosition" label-width="80px" :model="addFromData" :rules="addFromRules">
-			<el-row :gutter="20">
-				<el-col :span="24">
-					<el-form-item label="产品名称" prop="name">
-						<el-input v-model="addFromData.name" :disabled="fromList===true&&checkOrEdit===1"></el-input>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="产品提供方" prop="provider">
-						<el-input v-model="addFromData.provider" :disabled="fromList===true&&checkOrEdit===1"></el-input>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="产品类型" prop="ptype">
-						<el-select v-model="addFromData.ptype" placeholder="请选择" :disabled="fromList===true&&checkOrEdit===1">
-							<el-option v-for="item in productType" :key="item.id" :label="item.name" :value="item.id">
-							</el-option>
-						</el-select>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="申请对象" prop="ptype">
-						<el-select v-model="addFromData.level" placeholder="请选择" :disabled="fromList===true&&checkOrEdit===1">
-							<el-option v-for="item in appilyType" :key="item.id" :label="item.name" :value="item.id">
-							</el-option>
-						</el-select>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="展业区域" prop="province">
-						<el-select v-model="addFromData.areaPath" multiple placeholder="全国" :disabled="fromList===true&&checkOrEdit===1">
-						 	<el-option
-						    v-for="item in province"
-						    :key="item.value"
-						    :label="item.label"
-						    :value="item.label"
-						    >
-						    </el-option>
-						</el-select>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="产品链接" prop="pointStatus">
-						<el-radio-group v-model="addFromData.pointStatus">
-							<el-radio-button :label=1>可用</el-radio-button>
-							<el-radio-button :label=2>不可用</el-radio-button>
-						</el-radio-group>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24" v-if="addFromData.pointStatus === 1">
-					<el-form-item label="链接地址" prop="externalUrl">
-						<el-input v-model.number="addFromData.externalUrl" :disabled="fromList===true&&checkOrEdit===1"></el-input>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="额度下限(万)" prop="amountLower">
-						<el-input v-model.number="addFromData.amountLower" :disabled="fromList===true&&checkOrEdit===1"></el-input>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="额度上限(万)" prop="amountUpper">
-						<el-input v-model.number="addFromData.amountUpper" :disabled="fromList===true&&checkOrEdit===1"></el-input>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="期限下限(月)" prop="deadlineLower">
-						<el-input v-model.number="addFromData.deadlineLower" :disabled="fromList===true&&checkOrEdit===1"></el-input>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="期限上限(月)" prop="deadlineUpper">
-						<el-input v-model.number="addFromData.deadlineUpper" :disabled="fromList===true&&checkOrEdit===1"></el-input>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="利率下限(%/月)" prop="rateLower">
-						<el-input v-model="addFromData.rateLower" :disabled="fromList===true&&checkOrEdit===1"></el-input>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="利率上限(%/月)" prop="rateUpper">
-						<el-input v-model="addFromData.rateUpper" :disabled="fromList===true&&checkOrEdit===1"></el-input>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24" v-if="!fromList||checkOrEdit===2">
-					<el-form-item label="还款方式" prop="repayment">
-						<el-select v-model="returnPay" placeholder="请选择" @change='selectChange' :disabled="fromList===true&&checkOrEdit===1">
-							<el-option v-for="item in returnPayType" :key="item.id" :label="item.name" :value="item.id">
-							</el-option>
-						</el-select>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="审批层级" prop="highestLevel">
-						<el-select v-model="addFromData.highestLevel" placeholder="请选择审批层级" :disabled="fromList===true&&checkOrEdit===1">
-							<el-option v-for="item in highestLevelType" :key="item.id" :label="item.name" :value="item.id">
-							</el-option>
-						</el-select>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="还款方式"  v-if="returnPay=='其它'||checkOrEdit===1" prop="repayment">
-						<el-input v-model="addFromData.repayment" :disabled="fromList===true&&checkOrEdit===1"></el-input>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="产品图片"   prop="image">
-						<el-input v-model="addFromData.image" disabled></el-input>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="上传图片">
-						<el-upload
-							class="upload-demo"
-							ref="upload"
-							:action="imgUpUrl"
-							:headers="header"
-							:file-list="fileList"
-							:before-upload="beforeUpload"
-							:on-success='uploadSuccess'
-							:auto-upload="false"
-							:limit=1
-							:disabled='fromList===true&&checkOrEdit===1'
-							list-type="picture">
-							<el-button size="small" slot="trigger" type="primary">选取文件</el-button>
-							<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-							<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过5M</div>
-						</el-upload>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="产品特色" prop="description">
-						<quill-editor v-model="addFromData.description" :config="editorOption" :disabled="fromList===true&&checkOrEdit===1">
-						</quill-editor>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="适用对象" prop="userAudience">
-						<quill-editor v-model="addFromData.userAudience" :config="editorOption" :disabled="fromList===true&&checkOrEdit===1">
-						</quill-editor>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="所需材料" prop="materials">
-						<quill-editor v-model="addFromData.materials" :config="editorOption" :disabled="fromList===true&&checkOrEdit===1">
-						</quill-editor>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item label="申请流程" prop="applicationProcess">
-						<quill-editor v-model="addFromData.applicationProcess" :config="editorOption" :disabled="fromList===true&&checkOrEdit===1">
-						</quill-editor>
-					</el-form-item>
-				</el-col>
-				<el-col :span="24">
-					<el-form-item>
-						<el-button type="primary" @click="save" v-if="!fromList && saveOk === 1">保存</el-button>
-						<el-button type="info" v-if="!fromList && saveOk === 2">保存</el-button>
-						<el-button type="primary" @click="upload" v-if="!fromList && saveOk === 2">上架</el-button>
-						<el-button type="info" v-if="!fromList && saveOk === 1">上架</el-button>
-
-						<el-button type="primary" @click="check" v-if="fromList===true&&checkOrEdit===1">确定</el-button>
-						<el-button type="primary" @click="update" v-if="fromList===true&&checkOrEdit===2">提交</el-button>
-					</el-form-item>
-				</el-col>
-			</el-row>
-		</el-form>
 	</div>
 </template>
 
@@ -708,14 +540,16 @@
 </style>
 <style lang="scss">
 	.quill-editor {
-		min-height: 300px;
+		min-height: 600px;
 		.ql-container {
-			height: 150px;
+			min-height: 150px;
 		}
 	}
-	/*.mobile-el-form .quill-editor{*/
-		/**/
-	/*}*/
+	.mobile-el-form{
+		.el-form-item__label{
+			font-size: 12px;
+		}
+	}
 
 	.limit {
 		height: 30px;

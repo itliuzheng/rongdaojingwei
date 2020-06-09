@@ -17,7 +17,7 @@
 				</el-form-item>	
 			</el-col>
 			<el-col :span="24">
-				<el-form-item prop="roleName" label="角色">
+				<el-form-item prop="roleName" label="权限">
 					<el-input type="text" v-model="roleName" placeholder="邮箱 "/>
 				</el-form-item>	
 			</el-col>

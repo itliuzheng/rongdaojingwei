@@ -14,7 +14,7 @@
 				<el-input v-model="filterData.email" placeholder="邮箱"></el-input>
 			</el-col>
 			<el-col :span="device === 'desktop'?'4':'12'">
-				<el-select v-model="filterData.roleId" placeholder="角色">
+				<el-select v-model="filterData.roleId" placeholder="权限">
 					<el-option v-for="item in roleType" :key="item.id" :label="item.name" :value="item.id">
 					</el-option>
 				</el-select>

@@ -139,9 +139,13 @@
 					<el-button type="success" @click="reset">重置</el-button>
 				</el-col>
 			</el-row>
-			<list-scroll :tableData="tableData"
+			<list-scroll :tableData="tableData" :role="role"
 						 @refreshScroll="refreshLoad"
-						 @loadScroll="loadStart" ></list-scroll>
+						 @loadScroll="loadStart"
+						 @check="check"
+						 @edit="edit"
+						 @del="del"
+			></list-scroll>
 		</template>
 
 

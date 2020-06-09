@@ -3,7 +3,7 @@
 		<el-form ref="loginForm" autoComplete="on" :model="loginForm" :rules="loginRules" class="card-box login-form" :class="device === 'mobile'?'mobile-login-form':''">
 			<h3 class="title">融 道 经 纬</h3>
 			<el-form-item prop="phone">
-				<el-input type="text" v-model="loginForm.phone" placeholder="手机号码" autoComplete="on" />
+				<el-input type="text" name="phone" v-model="loginForm.phone" placeholder="手机号码" autoComplete="on" />
 				<i type="ios-person-outline" slot="prepend"></i>
 			</el-form-item>
 			<el-form-item prop="password">
@@ -92,19 +92,24 @@
 			this.identifyCode = "";
 			this.makeCode(this.identifyCodes, 4);
 			//console.log(this.identifyCode)
+
 		},
 		methods: {
 			handleLogin() {
+			    let _this = this;
 				this.$refs.loginForm.validate(valid => {
 					if (valid) {
 						this.loading = true;
 						this.$store.dispatch('Login', this.loginForm).then(() => {
-							this.$message.success('登录成功');
-							this.loading = false;
-							this.$router.push({path: '/home'});
+							// _this.$message.success('登录成功');
+							_this.loading = false;
+						    _this.$nextTick(()=>{
+						        _this.$router.push({name:'home'});
+							});
+
 						 }).catch(res => {
-							this.$message.error(res.msg);
-							this.loading = false;
+							_this.$message.error(res.msg);
+							_this.loading = false;
 						});
 					} else {
 						return false;
