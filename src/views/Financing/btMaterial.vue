@@ -111,13 +111,13 @@
 				</el-pagination>
 			</div>
 			<template v-else>
-				<bt-material-scroll :tableData="tableData" :key="'com'"
-									:userRole="userRole"
-						 @refreshScroll="refreshLoad"
-						 @loadScroll="loadStart"
-							 @reviewCom="reviewCom"
-							 @tijiaoCom="tijiaoCom"
-							 @delCom="delCom"></bt-material-scroll>
+
+				<my-scroll :scrollColumns="scrollColumns" :key="'com'"
+						:tableData="tableData"
+						:userRole="userRole"
+						:scrollButtonList="scrollButtonList"
+						@refreshScroll="refreshLoad"
+						@loadScroll="loadStart"></my-scroll>
 			</template>
 
 			<el-dialog title="" :visible.sync="dialogCom" :width="device === 'desktop'?'70%':'100%'" v-if="dialogCom">
@@ -407,14 +407,13 @@
 			</div>
 			<template v-else>
 
-				<bt-material-scroll :tableData="tableDataPer" :key="'per'"
-									tableType="per"
-									:userRole="userRole"
-						 @refreshScroll="refreshLoadPer"
-						 @loadScroll="loadStartPer"
-							 @reviewCom="reviewPer"
-							 @tijiaoCom="tijiaoPer"
-							 @delCom="delCom"></bt-material-scroll>
+
+				<my-scroll :scrollColumns="scrollColumnsPer" :key="'per'"
+						:tableData="tableDataPer"
+						:userRole="userRole"
+						:scrollButtonList="scrollButtonListPer"
+						@refreshScroll="refreshLoadPer"
+						@loadScroll="loadStartPer"></my-scroll>
 
 			</template>
 
@@ -571,9 +570,11 @@
 	import { productType, formatter, reviewStatus, imgUpUrl } from '@/api/common'
 	import { getTokenStorage } from '@/api/cookies'
 	import job from '@/unit/job'
-    import BtMaterialScroll from "./scrolls/btMaterialScroll";
+    import MyScroll from "@/components/MyScroll";
 	export default {
-        components: {BtMaterialScroll},
+        components: {
+            MyScroll
+		},
         created(){
 			this.sendReq();
 			this.sendReqPer();
@@ -845,8 +846,186 @@
 						trigger: 'blur'
 					}],
 				},
-				loading: false,
-				loadingPer: false,
+
+				scrollColumns:[
+					{
+						label: '融资编号:',
+						prop:'number',
+						widthPart:24
+					},
+					{
+						label: '所属部门:',
+						prop:'officeName',
+						isIf:true,
+						widthPart:24
+					},
+					{
+						label: '所属客户经理:',
+						prop:'manageName',
+						widthPart:24
+					},
+					{
+						label: '企业名称:',
+						prop:'companyName',
+						widthPart:24
+					},
+					{
+						label: '所属行业:',
+						prop:'industry',
+						widthPart:24
+					},
+					{
+						label: '贷款产品:',
+						prop:'productName',
+						widthPart:24
+					},
+					{
+						label: '申请额度（万）:',
+						prop:'amount',
+						widthPart:24
+					},
+					{
+						label: '贷款用途:',
+						prop:'useFunds',
+						widthPart:24
+					},
+					{
+						label: '申请期限（月）:',
+						prop:'deadline',
+						widthPart:24
+					},
+					{
+						label: '申请时间:',
+						prop:'applyDate',
+						widthPart:24
+					},
+					{
+						label: '企业联系人:',
+						prop:'name',
+						widthPart:24
+					},
+					{
+						label: '联系方式:',
+						prop:'mobile',
+						widthPart:24
+					},
+				],
+				scrollButtonList:[
+					{
+						type: 'text',
+						text: '补录',
+						isShow:true,
+						atClick: row => {
+							this.reviewCom(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '提交',
+						isShow:true,
+						atClick: row => {
+							this.tijiaoCom(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '删除',
+						isShow:true,
+						atClick: row => {
+							this.delCom(row);
+						}
+					}
+				],
+
+				scrollColumnsPer:[
+					{
+						label: '融资编号:',
+						prop:'number',
+						widthPart:24
+					},
+					{
+						label: '部门:',
+						prop:'officeName',
+						isIf:true,
+						widthPart:24
+					},
+					{
+						label: '所属客户经理:',
+						prop:'manageName',
+						widthPart:24
+					},
+					{
+						label: '姓名:',
+						prop:'name',
+						widthPart:24
+					},
+					{
+						label: '联系方式:',
+						prop:'mobile',
+						widthPart:24
+					},
+					{
+						label: '户籍:',
+						prop:'registerAddress',
+						widthPart:24
+					},
+					{
+						label: '职业:',
+						prop:'industry',
+						widthPart:24
+					},
+					{
+						label: '申请时间:',
+						prop:'applyDate',
+						widthPart:24
+					},
+					{
+						label: '贷款产品:',
+						prop:'productName',
+						widthPart:24
+					},
+					{
+						label: '申请额度（万）:',
+						prop:'amount',
+						widthPart:24
+					},
+					{
+						label: '贷款用途:',
+						prop:'useFunds',
+						widthPart:24
+					},
+					{
+						label: '申请期限（月）:',
+						prop:'deadline',
+						widthPart:24
+					}
+				],
+				scrollButtonListPer:[
+					{
+						type: 'text',
+						text: '补录',
+						isShow:true,
+						atClick: row => {
+							this.reviewPer(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '提交',
+						isShow:true,
+						atClick: row => {
+							this.tijiaoPer(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '删除',
+						isShow:true,
+						atClick: row => {
+							this.delPer(row);
+						}
+					}
+				],
 			}
 		},
 		methods: {
@@ -951,7 +1130,6 @@
 				supplementList(this.filterData).then(res => {
 					//console.log(res)
 					if(this.device === 'mobile'){
-						this.loading = false;
 						if(this.filterData.pageNum == 1){
 						    this.$set(this,'tableData',res.data.records);
 						    Bus.$emit('refreshEnd');
@@ -973,7 +1151,6 @@
 				supplementList(this.filterDataPer).then(res => {
 
 					if(this.device === 'mobile'){
-						this.loadingPer = false;
 						if(this.filterDataPer.pageNum == 1){
 						    this.$set(this,'tableDataPer',res.data.records);
 						    Bus.$emit('refreshEndPer');
@@ -1069,6 +1246,23 @@
 					delPageLog(scope.id).then(res => {
 						this.$message.success(res.msg);
 						this.sendReq();
+					})
+				})
+			},
+			delPer(scope){
+				this.$confirm(
+					'谨慎操作,删除无法恢复',
+					'确定删除',
+					{
+						confirmButtonText:'删除',
+						cancelButtonText: '取消',
+						type:'warning'
+
+					}
+				).then(() => {
+					delPageLog(scope.id).then(res => {
+						this.$message.success(res.msg);
+						this.sendReqPer();
 					})
 				})
 			},

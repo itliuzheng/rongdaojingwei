@@ -1,6 +1,6 @@
 <template>
   <div class="pr-wrap">
-    <div class="wrap-part first">
+    <div  v-if="tableData.length != 0" class="wrap-part">
       <vue-scroll
         ref="vs"
         :ops="ops"
@@ -9,13 +9,42 @@
         @refresh-before-deactivate="handleRBD"
         @load-start="handleLoadStart"
       >
-        <template v-for="(item, index) in amount">
-          <div
-            class="rl-child"
-            :key="index"
-            :class="getClass(index)"
-          />
+        <template v-for="item in tableData">
+
+            <el-card shadow="never"  class="box-card" :key="item.number">
+                <div slot="header" class="clearfix">
+                  <template v-for="(list,_index) in scrollButtonList">
+                    <el-button v-if="list.isShow"  @click.native.prevent="list.atClick(item)" :type="list.type" size="small" :key="_index">
+                        {{list.text}}
+                    </el-button>
+                  </template>
+                </div>
+                <el-row :gutter="20" class="card-list">
+                    <template v-for="(list,_index) in scrollColumns" >
+                      <el-col :key="_index" :span="list.widthPart" class="clearfix"
+                              v-if="!list.isIf">
+                          <p class="fl">{{list.label}}</p>
+                          <p class="fr" v-if="list.prop === 'highestLevel'" >{{item[list.prop] === 1?'总后台':'一级管理员'}}</p>
+                          <p class="fr" v-else-if="list.prop === 'reviewStatus'" >{{item[list.prop] === 1?'通过':'不通过'}}</p>
+                          <p class="fr" v-else-if="list.prop === 'delFlag'" >{{item[list.prop] === 1?'有效':'无效'}}</p>
+                          <p class="fr" v-else>{{item[list.prop]}}</p>
+                      </el-col>
+                      <div v-else>
+                        <el-col :key="_index" :span="list.widthPart" class="clearfix"
+                                v-if="userRole!='second'">
+                            <p class="fl">{{list.label}}</p>
+                            <p class="fr" v-if="list.prop === 'highestLevel'" >{{item[list.prop] === 1?'总后台':'一级管理员'}}</p>
+                            <p class="fr" v-else-if="list.prop === 'reviewStatus'" >{{item[list.prop] === 1?'通过':'不通过'}}</p>
+                            <p class="fr" v-else-if="list.prop === 'delFlag'" >{{item[list.prop] === 1?'有效':'无效'}}</p>
+                            <p class="fr" v-else>{{item[list.prop]}}</p>
+                        </el-col>
+                      </div>
+                    </template>
+
+                </el-row>
+            </el-card>
         </template>
+          <div class="placeholder_height"></div>
         <div
           slot="load-beforeDeactive"
           v-if="noData"
@@ -37,71 +66,34 @@
               p-id="8058"
             ></path>
           </svg>
-          暂无更多
+          暂无更多数据
         </div>
       </vue-scroll>
     </div>
-    <div class="wrap-part second">
-      <vue-scroll
-        :ops="operationOps"
-        ref="op"
-      >
-        <table class="customize-table">
-          <tr>
-            <th>autoLoadEnable</th>
-            <td>True:<input
-                type="radio"
-                :value="true"
-                v-model="ops.vuescroll.pushLoad.auto"
-              > False:
-              <input
-                type="radio"
-                :value="false"
-                v-model="ops.vuescroll.pushLoad.auto"
-              ></td>
-          </tr>
-          <tr>
-            <th>autoLoadDistance</th>
-            <td> <input
-                type="number"
-                min="0"
-                v-model="ops.vuescroll.pushLoad.autoLoadDistance"
-                :disabled="!ops.vuescroll.pushLoad.auto"
-              ></td>
-          </tr>
-          <tr>
-            <th>Trigger Refresh Or Load</th>
-            <td>
-              Load: <input
-                type="radio"
-                value="load"
-                v-model="triggerType"
-              > <br /><br /> Refresh: <input
-                type="radio"
-                value="refresh"
-                v-model="triggerType"
-              > <br />
-              <br />
-              <button @click="trigger">Trigger</button>
-            </td>
-          </tr>
-        </table>
-      </vue-scroll>
-
-    </div>
+      <div v-else class="no-data">暂无更多数据</div>
   </div>
 </template>
 
 <script>
+	import Bus from '@/unit/bus.js'
 export default {
   props: {
-
-  },
-  mounted() {
-    console.log(this.$refs.op);
+      tableData:{
+          default:[]
+      },
+      scrollColumns:{
+          type:Array,
+          default:[]
+      },
+      scrollButtonList:{
+          type:Array,
+          default:[]
+      },
+      userRole:{
+          default:'second'
+      },
   },
   data() {
-    const config = {};
     const ops = {
       vuescroll: {
         mode: 'slide',
@@ -113,114 +105,93 @@ export default {
           auto: true,
           autoLoadDistance: 10
         }
-      }
+      },
+        bar: {
+          background:'#c1c1c1',
+          opacity: 0.5,
+            minSize:0.3
+        }
     };
-
-  ops.vuescroll.pullRefresh.tips = {
-    deactive: '下拉刷新',
-    active: '释放刷新',
-    start: '刷新中...',
-    beforeDeactive: '刷新成功!'
-  };
-  ops.vuescroll.pushLoad.tips = {
-    deactive: '上拉加载',
-    active: '释放加载',
-    start: '加载中...',
-    beforeDeactive: '加载成功!'
-  };
-
-  config.animateTip = '您也可以通过slot来自定义不同的刷新/加载动画。';
+      ops.vuescroll.pullRefresh.tips = {
+        deactive: '下拉刷新',
+        active: '释放刷新',
+        start: '刷新中...',
+        beforeDeactive: '刷新成功!'
+      };
+      ops.vuescroll.pushLoad.tips = {
+        deactive: '上拉加载',
+        active: '释放加载',
+        start: '加载中...',
+        beforeDeactive: '加载成功!'
+      };
 
     return {
-      ops,
-      config,
-      width: '',
-      operationOps: {
-        rail: {
-          size: '20px'
-        },
-        bar: {
-          size: '15px',
-          opacity: 0.5,
-          onlyShowBarOnScroll: false
-        }
-      },
-      itemAmount: 3,
-      refresh: 1,
-      noData: false,
-      triggerType: 'load'
+        ops,
+        width: '',
+        refresh: 1,
+        noData: false,
+        isDown:0
     };
   },
   computed: {
-    amount() {
-      function getRandom() {
-        let str = '#';
-        for (let i = 0; i < 6; i++) {
-          str += Math.floor(Math.random() * 16).toString(16);
-        }
-        return str;
-      }
-      return (
-        this.refresh &&
-        Array.apply(null, {
-          length: this.itemAmount
-        }).map(item => {
-          return getRandom();
-        })
-      );
-    }
   },
+    watch:{
+      isDown:function (newValue,oldValue) {
+          if(this.tableData.length != 0){
+              if(this.$refs["vs"]) this.$refs["vs"].refresh();
+          }
+      }
+    },
   methods: {
-    getClass(index) {
-      return ['child' + ((index % 7) + 1)];
-    },
+      awaitRefresh(done){
+          let _this = this;
+          return new Promise((resolve,reject)=>{
+              Bus.$on('refreshEnd',function () {
+                  _this.isDown += 1;
+                  done();
+                  resolve();
+              })
+          })
+      },
+      awaitLoad(done){
+          let _this = this;
+          return new Promise((resolve,reject)=>{
+                Bus.$on('loadEnd',function (res) {
+                    _this.noData = res;
+                    done();
+                    resolve();
+                })
+          })
+      },
+
     handleRS(vsInstance, refreshDom, done) {
-        console.log('刷新');
-      const vm = this;
-      setTimeout(() => {
-        this.refresh++;
-        done();
-      }, 1500);
-    },
-    handleLoadStart(vm, dom, done) {
-        console.log('开始下拉');
-      setTimeout(() => {
-        const random = Math.floor(Math.random() * 2) + 1;
-        if (random == 1) {
-          this.noData = true;
-        } else {
-          this.noData = false;
+        let _this = this;
+        _this.$emit('refreshScroll',done);
+
+        async function nextDone() {
+            await _this.awaitRefresh(done)
         }
-        done();
-      }, 600);
-    },
-    handleLBD(vm, loadDom, done) {
-        console.log('上拉加载完成');
-      setTimeout(() => {
-        if (!this.noData) {
-          this.itemAmount += 2;
-        }
-        done();
-      }, 500);
+
+        nextDone();
+
+
     },
     handleRBD(vm, loadDom, done) {
-        console.log('下拉刷新完成');
-      setTimeout(() => {
         done();
-      }, 500);
     },
-    getBg() {
-      let str = '#';
-      let i = 6;
-      while (i--) {
-        str += Math.floor(Math.random() * 16).toString(16);
-      }
-      return {
-        backgroundColor: str
-      };
+
+    handleLoadStart(vm, dom, done) {
+        let _this = this;
+        _this.$emit('loadScroll',done);
+
+        async function nextDone() {
+            await _this.awaitLoad(done)
+        }
+
+        nextDone();
     },
-    trigger() {
-      this.$refs['vs'].triggerRefreshOrLoad(this.triggerType);
+    handleLBD(vm, loadDom, done) {
+        done();
     }
   }
 };
@@ -230,87 +201,29 @@ export default {
 @media (max-width: 719px) {
   .pr-wrap {
     flex-wrap: wrap;
-
     .wrap-part {
       width: 100% !important;
-
-      &.first {
-        height: 60%;
-      }
-
-      &.second {
-        height: 40%;
-      }
+        max-height: 100%;
+        .box-card{
+            margin: 10px auto 0;
+        }
     }
   }
 }
 
 .pr-wrap {
-  display: flex;
-  height: 100%;
-  justify-content: center;
-
-  table {
-    margin: 0;
-  }
-
-  .rl-child {
-    width: 100%;
-    height: 200px;
-  }
-
-  .wrap-part {
+    display: flex;
     height: 100%;
-
-    &.first {
-      width: 40%;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+    .placeholder_height{
+        height: 20px;
     }
 
-    &.second {
-      width: 30%;
+    .no-data{
+        line-height: 2;
+        margin-top: 20px;
     }
 
-    .parent {
-      .rl-child {
-      }
-    }
-
-    table {
-      display: table;
-      width: 100%;
-    }
-  }
-}
-
-.child1 {
-  background-color: #43d2c6;
-}
-
-.child2 {
-  background-color: #589be5;
-}
-
-.child3 {
-  background-color: #f3b500;
-}
-
-.child4 {
-  background-color: #ff705a;
-}
-
-.child5 {
-  background-color: #fe7a9c;
-}
-
-.child6 {
-  background-color: #7a85ee;
-}
-
-.child7 {
-  background-color: #57cc71;
-}
-
-.animate-tip {
-  text-align: center;
-}
 </style>

@@ -72,7 +72,7 @@
 				</el-table-column>
 				<el-table-column prop="createDate" label="创建时间" show-overflow-tooltip width="200">
 				</el-table-column>
-				<el-table-column prop="" label="操作" show-overflow-tooltip width="" fixed="right" width="150">
+				<el-table-column prop="" label="操作" show-overflow-tooltip  fixed="right" width="150">
 					<template slot-scope="scope">
 						<el-button @click.native.prevent="check(scope.row)" type="text" size="small">
 							查看
@@ -92,11 +92,13 @@
 
 		<template v-else>
 
-			<banner-scroll :tableData="tableData" :key="'power'"
-						 @refreshScroll="refreshLoad"
-						 @loadScroll="loadStart"
-						 @check="check"
-						 @edit="edit"></banner-scroll>
+			<my-scroll :scrollColumns="scrollColumns"
+					:tableData="tableData"
+					:userRole="userRole"
+					:scrollButtonList="scrollButtonList"
+					@refreshScroll="refreshLoad"
+					@loadScroll="loadStart"></my-scroll>
+
 		</template>
 
 		<el-dialog title="轮播图" :visible.sync="dialogVisible" :width="device === 'desktop'?'70%':'100%'" :before-close="handleClose">
@@ -221,9 +223,11 @@
 	import { bannerPage, bannerAdd, bannerUpdate } from '@/api/req'
 	import { imgUpUrl } from '@/api/common'
 	import {getTokenStorage} from '@/api/cookies'
-    import BannerScroll from "./scrolls/bannerScroll";
+    import MyScroll from "@/components/MyScroll";
 	export default {
-        components: {BannerScroll},
+        components: {
+            MyScroll
+		},
         data() {
 			return {
 				imgUpUrl: imgUpUrl,
@@ -276,7 +280,62 @@
 						type: 'number',
 						message: '请输入数字',
 					}]
-				}
+				},
+				scrollColumns:[
+					{
+						label: 'ID:',
+						prop:'id',
+						widthPart:24
+					},
+					{
+						label: '标题:',
+						prop:'title',
+						widthPart:24
+					},
+					{
+						label: '图片地址:',
+						prop:'imgUrl',
+						widthPart:24
+					},
+					{
+						label: '排序:',
+						prop:'ordinal',
+						widthPart:24
+					},
+					{
+						label: '状态:',
+						prop:'delFlag',
+						widthPart:24
+					},
+					{
+						label: '创建人:',
+						prop:'createUserName',
+						widthPart:24
+					},
+					{
+						label: '创建时间:',
+						prop:'createDate',
+						widthPart:24
+					}
+				],
+				scrollButtonList:[
+					{
+						type: 'text',
+						text: '查看',
+						isShow:true,
+						atClick: row => {
+							this.check(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '修改',
+						isShow:true,
+						atClick: row => {
+							this.edit(row);
+						}
+					}
+				],
 			}
 		},
 		created() {

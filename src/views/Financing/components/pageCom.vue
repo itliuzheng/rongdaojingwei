@@ -57,8 +57,6 @@
 				<el-button type="success" @click="reset">重置</el-button>
 			</el-col>
 		</el-row>
-
-
 		<div v-if="device === 'desktop'">
 			<el-table  ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" border>
 				<el-table-column prop="number" label="融资编号" width="150">
@@ -110,14 +108,12 @@
 			</el-pagination>
 		</div>
 		<template v-else>
-			<page-com-scroll :tableData="tableData" :userRole="userRole" :reviewButton="reviewButton"
-						 @refreshScroll="refreshLoad"
-						 @loadScroll="loadStart"
-							 @check="check"
-							 @review="review"
-							 @reviewLog="reviewLog"
-							 @deleteLog="deleteLog"
-			></page-com-scroll>
+			<my-scroll :scrollColumns="scrollColumns"
+					:tableData="tableData"
+					:userRole="userRole"
+					:scrollButtonList="scrollButtonList"
+					@refreshScroll="refreshLoad"
+					@loadScroll="loadStart"></my-scroll>
 		</template>
 
 	</div>
@@ -128,10 +124,10 @@
 	import {financingPage, sysOffice, proSelection, delPageLog } from '@/api/req'	
 	import { productType, formatter } from '@/api/common'
 	import job from '@/unit/job'
-    import PageComScroll from "../scrolls/pageComScroll";
+    import MyScroll from "@/components/MyScroll";
 	export default {
 		name: 'componentPage',
-        components: {PageComScroll},
+        components: {MyScroll},
         props:['role', 'start', 'status', 'level', 'reviewButton', 'reviewLogButton','menuIndex','deleteLogButton'],
 		computed: {
 			_role: function (){
@@ -182,7 +178,111 @@
 					menuIndex: null,
 				},
 				total: null, //总条数
-				labelPosition: 'right',				
+				labelPosition: 'right',
+				scrollColumns:[
+					{
+						label: '融资编号:',
+						prop:'number',
+						widthPart:24
+					},
+					{
+						label: '所属公司:',
+						prop:'name',
+						isIf:true,
+						widthPart:24
+					},
+					{
+						label: '所属部门:',
+						prop:'officeName',
+						isIf:true,
+						widthPart:24
+					},
+					{
+						label: '所属客户经理:',
+						prop:'manageName',
+						widthPart:24
+					},
+					{
+						label: '企业名称:',
+						prop:'companyName',
+						widthPart:24
+					},
+					{
+						label: '所属行业:',
+						prop:'industry',
+						widthPart:24
+					},
+					{
+						label: '贷款产品:',
+						prop:'productName',
+						widthPart:24
+					},
+					{
+						label: '申请额度（万）:',
+						prop:'amount',
+						widthPart:24
+					},
+					{
+						label: '贷款用途:',
+						prop:'useFunds',
+						widthPart:24
+					},
+					{
+						label: '申请期限（月）:',
+						prop:'deadline',
+						widthPart:24
+					},
+					{
+						label: '申请时间:',
+						prop:'applyDate',
+						widthPart:24
+					},
+					{
+						label: '企业联系人:',
+						prop:'name',
+						widthPart:24
+					},
+					{
+						label: '联系方式:',
+						prop:'mobile',
+						widthPart:24
+					},
+				],
+				scrollButtonList:[
+					{
+						type: 'text',
+						text: '查看',
+						isShow:true,
+						atClick: row => {
+							this.check(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '审核',
+						isShow:this.reviewButton,
+						atClick: row => {
+							this.review(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '查看审核记录',
+						isShow:this.reviewLogButton,
+						atClick: row => {
+							this.reviewLog(row);
+						}
+
+					},
+					{
+						type: 'text',
+						text: '删除',
+						isShow:this.deleteLogButton,
+						atClick: row => {
+							this.deleteLog(row);
+						}
+					},
+				],
 			}
 		},
 		created() {

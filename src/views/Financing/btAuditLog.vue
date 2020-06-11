@@ -105,12 +105,14 @@
 				</el-pagination>
 			</div>
 			<template v-else>
-				<bt-audit-log-scroll  :tableData="tableData" :key="'com'"
-									:userRole="userRole"
-						 @refreshScroll="refreshLoad"
-						 @loadScroll="loadStart"
-							 @check="check"
-							 @reviewLog="reviewLog"></bt-audit-log-scroll>
+
+				<my-scroll :scrollColumns="scrollColumns" :key="'com'"
+						:tableData="tableData"
+						:userRole="userRole"
+						:scrollButtonList="scrollButtonList"
+						@refreshScroll="refreshLoad"
+						@loadScroll="loadStart"></my-scroll>
+
 			</template>
 
 
@@ -345,7 +347,7 @@
 					</el-table-column>
 					<el-table-column prop="" label="操作" show-overflow-tooltip width="200" fixed="right">
 						<template slot-scope="scope">
-							<el-button @click.native.prevent="check(scope.row)" type="text" size="small">
+							<el-button @click.native.prevent="checkPer(scope.row)" type="text" size="small">
 								查看
 							</el-button>
 							<el-button @click.native.prevent="reviewLogPer(scope.row)" type="text" size="small">
@@ -361,13 +363,14 @@
 			</div>
 			<template v-else>
 
-				<bt-audit-log-scroll  :tableData="tableDataPer" :key="'per'"
-									tableType="per"
-									:userRole="userRole"
-						 @refreshScroll="refreshLoadPer"
-						 @loadScroll="loadStartPer"
-							 @check="check"
-							 @reviewLogPer="reviewLogPer"></bt-audit-log-scroll>
+
+				<my-scroll :scrollColumns="scrollColumnsPer" :key="'per'"
+						:tableData="tableDataPer"
+						:userRole="userRole"
+						:scrollButtonList="scrollButtonListPer"
+						@refreshScroll="refreshLoadPer"
+						@loadScroll="loadStartPer"></my-scroll>
+
 			</template>
 
 			<el-dialog title="查看" :visible.sync="dialogPer" :width="device === 'desktop'?'70%':'100%'">
@@ -518,10 +521,10 @@
 	import { sysOffice, proSelection, supplementAuditRecord } from '@/api/req'
 	import { productType, formatter } from '@/api/common'
 	import job from '@/unit/job'
-    import BtAuditLogScroll from "./scrolls/btAuditLogScroll";
+    import MyScroll from "@/components/MyScroll";
 	export default {
 		components: {
-            BtAuditLogScroll,
+            MyScroll,
 			componentReviewLogCom,
 			componentReviewLogPer
 		},
@@ -586,7 +589,211 @@
 				multipleSelection: [], //总条数
 				multipleSelectionPer: [], //总条数
 				labelPosition: 'right',		
-				reviewLogData:[]
+				reviewLogData:[],
+
+				scrollColumns:[
+					{
+						label: '融资编号:',
+						prop:'number',
+						widthPart:24
+					},
+					{
+						label: '所属部门:',
+						prop:'officeName',
+						isIf:true,
+						widthPart:24
+					},
+					{
+						label: '所属客户经理:',
+						prop:'manageName',
+						widthPart:24
+					},
+					{
+						label: '企业名称:',
+						prop:'companyName',
+						widthPart:24
+					},
+					{
+						label: '所属行业:',
+						prop:'industry',
+						widthPart:24
+					},
+					{
+						label: '贷款产品:',
+						prop:'productName',
+						widthPart:24
+					},
+					{
+						label: '申请额度（万）:',
+						prop:'amount',
+						widthPart:24
+					},
+					{
+						label: '贷款用途:',
+						prop:'useFunds',
+						widthPart:24
+					},
+					{
+						label: '申请期限（月）:',
+						prop:'deadline',
+						widthPart:24
+					},
+					{
+						label: '申请时间:',
+						prop:'applyDate',
+						widthPart:24
+					},
+					{
+						label: '企业联系人:',
+						prop:'name',
+						widthPart:24
+					},
+					{
+						label: '联系方式:',
+						prop:'mobile',
+						widthPart:24
+					},
+					{
+						label: '补录审核状态:',
+						prop:'reviewStatus',
+						widthPart:24
+					},
+					{
+						label: '审核时间:',
+						prop:'reviewDate',
+						widthPart:24
+					},
+					{
+						label: '审核人:',
+						prop:'reviewUserName',
+						widthPart:24
+					},
+					{
+						label: '不通过原因:',
+						prop:'description',
+						widthPart:24
+					},
+				],
+				scrollButtonList:[
+					{
+						type: 'text',
+						text: '查看',
+						isShow:true,
+						atClick: row => {
+							this.check(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '查看审核记录',
+						isShow:true,
+						atClick: row => {
+							this.reviewLog(row);
+						}
+					}
+				],
+
+				scrollColumnsPer:[
+					{
+						label: '融资编号:',
+						prop:'number',
+						widthPart:24
+					},
+					{
+						label: '部门:',
+						prop:'officeName',
+						isIf:true,
+						widthPart:24
+					},
+					{
+						label: '所属客户经理:',
+						prop:'manageName',
+						widthPart:24
+					},
+					{
+						label: '姓名:',
+						prop:'name',
+						widthPart:24
+					},
+					{
+						label: '联系方式:',
+						prop:'mobile',
+						widthPart:24
+					},
+					{
+						label: '户籍:',
+						prop:'registerAddress',
+						widthPart:24
+					},
+					{
+						label: '职业:',
+						prop:'industry',
+						widthPart:24
+					},
+					{
+						label: '申请时间:',
+						prop:'applyDate',
+						widthPart:24
+					},
+					{
+						label: '贷款产品:',
+						prop:'productName',
+						widthPart:24
+					},
+					{
+						label: '申请额度（万）:',
+						prop:'amount',
+						widthPart:24
+					},
+					{
+						label: '贷款用途:',
+						prop:'useFunds',
+						widthPart:24
+					},
+					{
+						label: '申请期限（月）:',
+						prop:'deadline',
+						widthPart:24
+					},
+					{
+						label: '补录审核状态:',
+						prop:'reviewStatus',
+						widthPart:24
+					},
+					{
+						label: '审核时间:',
+						prop:'reviewDate',
+						widthPart:24
+					},
+					{
+						label: '审核人:',
+						prop:'reviewUserName',
+						widthPart:24
+					},
+					{
+						label: '不通过原因:',
+						prop:'description',
+						widthPart:24
+					},
+				],
+				scrollButtonListPer:[
+					{
+						type: 'text',
+						text: '查看',
+						isShow:true,
+						atClick: row => {
+							this.checkPer(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '查看审核记录',
+						isShow:true,
+						atClick: row => {
+							this.reviewLogPer(row);
+						}
+					}
+				],
 			}
 		},
 		methods: {

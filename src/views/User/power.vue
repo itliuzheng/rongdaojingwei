@@ -59,11 +59,14 @@
 			</el-pagination>
 		</template>
 		<template v-else>
-			<power-scroll :tableData="tableData" :key="'power'"
-						 @refreshScroll="refreshLoad"
-						 @loadScroll="loadStart"
-						 @setPower="setPower"></power-scroll>
+
+			<my-scroll :scrollColumns="scrollColumns"
+					:tableData="tableData"
+					:scrollButtonList="scrollButtonList"
+					@refreshScroll="refreshLoad"
+					@loadScroll="loadStart"></my-scroll>
 		</template>
+
 		<el-dialog title="权限" :visible.sync="dialogVisible" :width="device === 'desktop'?'80%':'100%'" :before-close="handleClose">
 			<el-form :label-position="labelPosition" :label-width="device === 'desktop'?'180px':'80px'" :model="addFromData">
 				<el-row :gutter="20">
@@ -176,10 +179,10 @@
 	import Bus from '@/unit/bus.js'
 	import { sysUserPage, sysOffice, userPower, userPowerAssign } from '@/api/req'
 	import { roleType, formatter } from '@/api/common'
-    import PowerScroll from "./scrolls/powerScroll";
+    import MyScroll from "@/components/MyScroll";
 	export default {
 		components: {
-            PowerScroll
+            MyScroll
 			//loadSet
 		},
 		data() {
@@ -223,7 +226,45 @@
 					mark: 0,//0删除1添加
 					pids: [],//选中的列表数组
 					uid: '',
-				}
+				},
+
+				scrollColumns:[
+					{
+						label: '用户账号:',
+						prop:'loginName',
+						widthPart:24
+					},
+					{
+						label: '用户姓名:',
+						prop:'realName',
+						widthPart:24
+					},
+					{
+						label: '手机号:',
+						prop:'mobile',
+						widthPart:24
+					},
+					{
+						label: '邮箱:',
+						prop:'email',
+						widthPart:24
+					},
+					{
+						label: '所属机构:',
+						prop:'officeName',
+						widthPart:24
+					}
+				],
+				scrollButtonList:[
+					{
+						type: 'text',
+						text: '设置权限',
+						isShow:true,
+						atClick: row => {
+							this.setPower(row);
+						}
+					}
+				],
 			}
 		},
 		created() {

@@ -48,10 +48,12 @@
 		</div>
 		<template v-else>
 
-			<power-index-scroll :tableData="tableData" :key="'power'"
-						 @refreshScroll="refreshLoad"
-						 @loadScroll="loadStart"
-						 @setPower="setPower"></power-index-scroll>
+
+			<my-scroll ref="myscroll" :scrollColumns="scrollColumns"
+					:tableData="tableData"
+					:scrollButtonList="scrollButtonList"
+					@refreshScroll="refreshLoad"
+					@loadScroll="loadStart"></my-scroll>
 
 		</template>
 
@@ -162,10 +164,10 @@
 	import Bus from '@/unit/bus.js'
 	import { salesmanPage, sysOffice, salesmanPro, salesmanAssign } from '@/api/req'
 	import { roleType, formatter } from '@/api/common'
-    import PowerIndexScroll from "./scrolls/powerIndexScroll";
+    import MyScroll from "@/components/MyScroll";
 	export default {
 		components: {
-            PowerIndexScroll
+            MyScroll
 			//loadSet
 		},
 		data() {
@@ -206,7 +208,40 @@
 					mark: 0,//0删除1添加
 					pids: [],//选中的列表数组
 					uid: '',
-				}
+				},
+
+				scrollColumns:[
+					{
+						label: '识别码:',
+						prop:'coding',
+						widthPart:24
+					},
+					{
+						label: '业务员姓名:',
+						prop:'name',
+						widthPart:24
+					},
+					{
+						label: '手机号:',
+						prop:'mobile',
+						widthPart:24
+					},
+					{
+						label: '邮箱:',
+						prop:'email',
+						widthPart:24
+					}
+				],
+				scrollButtonList:[
+					{
+						type: 'text',
+						text: '设置权限',
+						isShow:true,
+						atClick: row => {
+							this.setPower(row);
+						}
+					}
+				],
 			}
 		},
 		created() {
@@ -254,7 +289,7 @@
 			},
 			refreshLoad() {
 				this.filterData.pageNum = 1;
-				this.sendReq();
+				this.sendReqUser();
 			},
 			loadStart() {
 				if(this.noMore){
@@ -262,7 +297,7 @@
 					return ;
 				}
 				this.filterData.pageNum ++;
-				this.sendReq();
+				this.sendReqUser();
 			},
 			sendReqUser() {
 				var _this = this;

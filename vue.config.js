@@ -3,6 +3,7 @@ const path = require("path");
 module.exports = {
 	runtimeCompiler: true,
 	productionSourceMap: false,
+	lintOnSave: false,
 	publicPath: '/', // 设置打包文件相对路径
 	outputDir: process.env.NODE_ENV === "development" ? 'devdist' : 'dist',
 	assetsDir: "static",

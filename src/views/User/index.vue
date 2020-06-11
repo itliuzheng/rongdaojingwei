@@ -1,28 +1,29 @@
 <template>
 	<div class="boxShadow">
-		<el-row :gutter="20" v-if="role === 'first'">
-			<el-col :span="device === 'desktop'?'4':'12'">
-				<el-input v-model="filterData.loginName" placeholder="用户账号"></el-input>
-			</el-col>
-			<el-col :span="device === 'desktop'?'4':'12'">
-				<el-input v-model="filterData.realName" placeholder="用户姓名"></el-input>
-			</el-col>
-			<el-col :span="device === 'desktop'?'4':'12'">
-				<el-input v-model="filterData.mobile" placeholder="手机号"></el-input>
-			</el-col>
-			<el-col :span="device === 'desktop'?'4':'12'">
-				<el-input v-model="filterData.email" placeholder="邮箱"></el-input>
-			</el-col>
-			<el-col :span="device === 'desktop'?'4':'12'">
-				<el-input v-model="filterData.officeName" placeholder="所属机构"></el-input>
-			</el-col>
-			<el-col :span="device === 'desktop'?'8':'24'">
-				<el-button type="primary" @click="query">查询</el-button>
-				<el-button type="success" @click="reset">重置</el-button>
-				<el-button type="" @click="add">新增用户</el-button>
-			</el-col>
-		</el-row>
 		<div v-if="role === 'first'">
+
+			<el-row :gutter="20">
+				<el-col :span="device === 'desktop'?'4':'12'">
+					<el-input v-model="filterData.loginName" placeholder="用户账号"></el-input>
+				</el-col>
+				<el-col :span="device === 'desktop'?'4':'12'">
+					<el-input v-model="filterData.realName" placeholder="用户姓名"></el-input>
+				</el-col>
+				<el-col :span="device === 'desktop'?'4':'12'">
+					<el-input v-model="filterData.mobile" placeholder="手机号"></el-input>
+				</el-col>
+				<el-col :span="device === 'desktop'?'4':'12'">
+					<el-input v-model="filterData.email" placeholder="邮箱"></el-input>
+				</el-col>
+				<el-col :span="device === 'desktop'?'4':'12'">
+					<el-input v-model="filterData.officeName" placeholder="所属机构"></el-input>
+				</el-col>
+				<el-col :span="device === 'desktop'?'8':'24'">
+					<el-button type="primary" @click="query">查询</el-button>
+					<el-button type="success" @click="reset">重置</el-button>
+					<el-button type="" @click="add">新增用户</el-button>
+				</el-col>
+			</el-row>
 			<template v-if="device === 'desktop'">
 				<el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%" border >
 					<el-table-column prop="id" label="序号" width="120">
@@ -58,12 +59,11 @@
 
 			<template v-else>
 
-					<index-scroll :tableData="tableData" :key="'power'"
-								  :role="role"
-						 @refreshScroll="refreshLoad"
-						 @loadScroll="loadStart"
-						 @del="del"
-						 @update="update"></index-scroll>
+					<my-scroll :scrollColumns="scrollColumns"
+							:tableData="tableData"
+							:scrollButtonList="scrollButtonList"
+							@refreshScroll="refreshLoad"
+							@loadScroll="loadStart"></my-scroll>
 
 			</template>
 
@@ -110,7 +110,7 @@
 						</el-table-column>
 						<el-table-column prop="createName" label="创建人" show-overflow-tooltip width="">
 						</el-table-column>
-						<el-table-column prop="" label="操作" show-overflow-tooltip width="" fixed="right" width="200">
+						<el-table-column prop="" label="操作" show-overflow-tooltip  fixed="right" width="200">
 							<template slot-scope="scope">
 								<el-button @click.native.prevent="del(scope.row)" type="text" size="small">
 									删除
@@ -131,13 +131,11 @@
 				</template>
 				<template v-else>
 
-					<index-scroll :tableData="tableData" :key="'power'"
-								  :role="role"
-						 @refreshScroll="refreshLoad"
-						 @loadScroll="loadStart"
-						 @del="del"
-						 @update="update"
-						 @resetPass="resetPass"></index-scroll>
+					<my-scroll :scrollColumns="scrollColumnsSuper"
+							:tableData="tableData"
+							:scrollButtonList="scrollButtonListSuper"
+							@refreshScroll="refreshLoad"
+							@loadScroll="loadStart"></my-scroll>
 
 				</template>
 
@@ -198,11 +196,10 @@
 				</template>
 				<template v-else>
 
-					<index-scroll :tableData="tableDataSuperS" :key="'SuperS'"
-								  :role="role"
-									tableType="SuperS"
-						 @refreshScroll="refreshLoadSuperS"
-						 @loadScroll="loadStartSuperS"></index-scroll>
+					<my-scroll :scrollColumns="scrollColumns"
+							:tableData="tableDataSuperS"
+							@refreshScroll="refreshLoadSuperS"
+							@loadScroll="loadStartSuperS"></my-scroll>
 
 				</template>
 
@@ -271,10 +268,10 @@
 	import { sysUserPage, sysUserAdd, sysUserDel, sysUserUpdate, pageSecondaryAll, resetFirstLevel } from '@/api/req'
 	import { roleType, formatter } from '@/api/common'
 	import { regPhone, noEmpty, regEmail } from '@/api/reg'
-    import IndexScroll from "./scrolls/indexScroll";
+    import MyScroll from "@/components/MyScroll";
 	export default {
 		components: {
-            IndexScroll
+            MyScroll
 			//loadSet
 		},
 		data() {
@@ -378,7 +375,133 @@
 						type: 'number',
 						validator: less5
 					}]
-				}
+				},
+
+				scrollColumns:[
+					{
+						label: 'ID:',
+						prop:'id',
+						widthPart:24
+					},
+					{
+						label: '用户账号:',
+						prop:'loginName',
+						widthPart:24
+					},
+					{
+						label: '用户姓名:',
+						prop:'realName',
+						widthPart:24
+					},
+					{
+						label: '手机号:',
+						prop:'mobile',
+						widthPart:24
+					},
+					{
+						label: '邮箱:',
+						prop:'email',
+						widthPart:24
+					},
+					{
+						label: '所属机构:',
+						prop:'officeName',
+						widthPart:24
+					},
+					{
+						label: '创建人:',
+						prop:'createName',
+						widthPart:24
+					}
+				],
+				scrollButtonList:[
+					{
+						type: 'text',
+						text: '删除',
+						isShow:true,
+						atClick: row => {
+							this.del(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '修改',
+						isShow:true,
+						atClick: row => {
+							this.update(row);
+						}
+					}
+				],
+
+				scrollColumnsSuper:[
+					{
+						label: 'ID:',
+						prop:'id',
+						widthPart:24
+					},
+					{
+						label: '用户账号:',
+						prop:'loginName',
+						widthPart:24
+					},
+					{
+						label: '用户姓名:',
+						prop:'realName',
+						widthPart:24
+					},
+					{
+						label: '手机号:',
+						prop:'mobile',
+						widthPart:24
+					},
+					{
+						label: '邮箱:',
+						prop:'email',
+						widthPart:24
+					},
+					{
+						label: '所属机构:',
+						prop:'officeName',
+						widthPart:24
+					},
+					{
+						label: '下属数量:',
+						prop:'secondaryCount',
+						widthPart:24
+					},
+					{
+						label: '创建人:',
+						prop:'createName',
+						widthPart:24
+					}
+				],
+				scrollButtonListSuper:[
+					{
+						type: 'text',
+						text: '删除',
+						isShow:true,
+						atClick: row => {
+							this.del(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '修改',
+						isShow:true,
+						atClick: row => {
+							this.update(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '密码重置',
+						isShow:true,
+						atClick: row => {
+							this.resetPass(row);
+						}
+					}
+				],
+
 			}
 		},
 		created() {
@@ -479,7 +602,7 @@
 						this.totalSuperS = res.data.total;
 					}
 				}).catch(res => {
-					this.$message.error(res.msg);
+
 				})
 			},
 			query() {
@@ -499,7 +622,7 @@
 				this.sendReq();
 			},
 			querySuperS() {
-				this.sendReq();
+				this.sendReqSuperS();
 			},
 			resetSuperS() {
 				this.filterDataSuperS = {

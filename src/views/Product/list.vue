@@ -140,12 +140,13 @@
 				</el-col>
 			</el-row>
 			<list-scroll :tableData="tableData" :role="role"
-						 @refreshScroll="refreshLoad"
-						 @loadScroll="loadStart"
-						 @check="check"
-						 @edit="edit"
-						 @del="del"
+						@refreshScroll="refreshLoad"
+						@loadScroll="loadStart"
+						@check="check"
+						@edit="edit"
+						@del="del"
 			></list-scroll>
+
 		</template>
 
 

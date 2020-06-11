@@ -105,12 +105,13 @@
 				</el-pagination>
 			</div>
 			<template v-else>
-				<bt-audit-pass-scroll :tableData="tableData" :key="'com'"
-									:userRole="userRole"
-						 @refreshScroll="refreshLoad"
-						 @loadScroll="loadStart"
-							 @checkCom="checkCom"
-							 @reviewLogCom="reviewLogCom"></bt-audit-pass-scroll>
+
+				<my-scroll :scrollColumns="scrollColumns" :key="'com'"
+						:tableData="tableData"
+						:userRole="userRole"
+						:scrollButtonList="scrollButtonList"
+						@refreshScroll="refreshLoad"
+						@loadScroll="loadStart"></my-scroll>
 
 			</template>
 
@@ -377,13 +378,12 @@
 			</div>
 			<template v-else>
 
-				<bt-audit-pass-scroll :tableData="tableDataPer" :key="'per'"
-									tableType="per"
-									:userRole="userRole"
-						 @refreshScroll="refreshLoadPer"
-						 @loadScroll="loadStartPer"
-							 @checkPer="checkPer"
-							 @reviewLogPer="reviewLogPer"></bt-audit-pass-scroll>
+				<my-scroll :scrollColumns="scrollColumnsPer" :key="'per'"
+						:tableData="tableDataPer"
+						:userRole="userRole"
+						:scrollButtonList="scrollButtonListPer"
+						@refreshScroll="refreshLoadPer"
+						@loadScroll="loadStartPer"></my-scroll>
 
 			</template>
 
@@ -550,10 +550,10 @@
 	import { sysOffice, proSelection, supplementAuditRecord } from '@/api/req'
 	import { productType, formatter } from '@/api/common'
 	import job from '@/unit/job'
-    import BtAuditPassScroll from "./scrolls/btAuditPassScroll";
+    import MyScroll from "@/components/MyScroll";
 	export default {
 		components: {
-            BtAuditPassScroll,
+            MyScroll,
 			componentReviewLogCom,
 			componentReviewLogPer
 		},
@@ -628,6 +628,210 @@
 				multipleSelectionPer: [], //总条数
 				labelPosition: 'right',		
 				reviewLogData:[],
+
+				scrollColumns:[
+					{
+						label: '融资编号:',
+						prop:'number',
+						widthPart:24
+					},
+					{
+						label: '所属部门:',
+						prop:'officeName',
+						isIf:true,
+						widthPart:24
+					},
+					{
+						label: '所属客户经理:',
+						prop:'manageName',
+						widthPart:24
+					},
+					{
+						label: '企业名称:',
+						prop:'companyName',
+						widthPart:24
+					},
+					{
+						label: '所属行业:',
+						prop:'industry',
+						widthPart:24
+					},
+					{
+						label: '贷款产品:',
+						prop:'productName',
+						widthPart:24
+					},
+					{
+						label: '申请额度（万）:',
+						prop:'amount',
+						widthPart:24
+					},
+					{
+						label: '贷款用途:',
+						prop:'useFunds',
+						widthPart:24
+					},
+					{
+						label: '申请期限（月）:',
+						prop:'deadline',
+						widthPart:24
+					},
+					{
+						label: '申请时间:',
+						prop:'applyDate',
+						widthPart:24
+					},
+					{
+						label: '企业联系人:',
+						prop:'name',
+						widthPart:24
+					},
+					{
+						label: '联系方式:',
+						prop:'mobile',
+						widthPart:24
+					},
+					{
+						label: '补录审核状态:',
+						prop:'reviewStatus',
+						widthPart:24
+					},
+					{
+						label: '审核时间:',
+						prop:'reviewDate',
+						widthPart:24
+					},
+					{
+						label: '审核人:',
+						prop:'reviewUserName',
+						widthPart:24
+					},
+					{
+						label: '不通过原因:',
+						prop:'description',
+						widthPart:24
+					},
+				],
+				scrollButtonList:[
+					{
+						type: 'text',
+						text: '查看',
+						isShow:true,
+						atClick: row => {
+							this.check(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '查看审核记录',
+						isShow:true,
+						atClick: row => {
+							this.reviewLog(row);
+						}
+					}
+				],
+
+				scrollColumnsPer:[
+					{
+						label: '融资编号:',
+						prop:'number',
+						widthPart:24
+					},
+					{
+						label: '部门:',
+						prop:'officeName',
+						isIf:true,
+						widthPart:24
+					},
+					{
+						label: '所属客户经理:',
+						prop:'manageName',
+						widthPart:24
+					},
+					{
+						label: '姓名:',
+						prop:'name',
+						widthPart:24
+					},
+					{
+						label: '联系方式:',
+						prop:'mobile',
+						widthPart:24
+					},
+					{
+						label: '户籍:',
+						prop:'registerAddress',
+						widthPart:24
+					},
+					{
+						label: '职业:',
+						prop:'industry',
+						widthPart:24
+					},
+					{
+						label: '申请时间:',
+						prop:'applyDate',
+						widthPart:24
+					},
+					{
+						label: '贷款产品:',
+						prop:'productName',
+						widthPart:24
+					},
+					{
+						label: '申请额度（万）:',
+						prop:'amount',
+						widthPart:24
+					},
+					{
+						label: '贷款用途:',
+						prop:'useFunds',
+						widthPart:24
+					},
+					{
+						label: '申请期限（月）:',
+						prop:'deadline',
+						widthPart:24
+					},
+					{
+						label: '补录审核状态:',
+						prop:'reviewStatus',
+						widthPart:24
+					},
+					{
+						label: '审核时间:',
+						prop:'reviewDate',
+						widthPart:24
+					},
+					{
+						label: '审核人:',
+						prop:'reviewUserName',
+						widthPart:24
+					},
+					{
+						label: '不通过原因:',
+						prop:'description',
+						widthPart:24
+					},
+				],
+				scrollButtonListPer:[
+					{
+						type: 'text',
+						text: '查看',
+						isShow:true,
+						atClick: row => {
+							this.checkPer(row);
+						}
+					},
+					{
+						type: 'text',
+						text: '查看审核记录',
+						isShow:true,
+						atClick: row => {
+							this.reviewLogPer(row);
+						}
+					}
+				],
 			}
 		},
 		methods: {
