@@ -1,5 +1,5 @@
 <template>	
-	<el-tabs type="border-card" @tab-click="changeTab">
+	<el-tabs type="border-card">
 		<el-tab-pane label="企业">
 			<componentPageCom ref='pageCom' :menuIndex='1' :role='role' :level='2' :status='status' :start='startType' :reviewButton='reviewButton' :reviewLogButton='reviewLogButton' @chakan='look' @shenhe='verify'></componentPageCom>
 			<el-dialog title="查看审核" :visible.sync="dialogCom" :width="device === 'desktop'?'70%':'100%'" v-if='dialogCom'>

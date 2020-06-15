@@ -169,7 +169,12 @@ export default {
         _this.$emit('refreshScroll',done);
 
         async function nextDone() {
-            await _this.awaitRefresh(done)
+            try {
+               await _this.awaitRefresh(done)
+            }catch (e) {
+                done();
+            }
+
         }
 
         nextDone();
@@ -185,7 +190,11 @@ export default {
         _this.$emit('loadScroll',done);
 
         async function nextDone() {
-            await _this.awaitLoad(done)
+            try{
+                await _this.awaitLoad(done)
+            }catch(e){
+                 done();
+            }
         }
 
         nextDone();

@@ -1,70 +1,74 @@
 <template>
 	<div>
 		<div class="home_cont" v-if="role!='first'">
-			<el-row :gutter="20" class='zIndex9'>
-				<el-col :span="24">
-					<div class="home_apply">
-						<h3>待处理申请</h3>
-						<el-row :gutter="20"  v-if="device === 'desktop'">
-							<el-col :span="6">
-								<div class="grid-content bg-purple">
-									<h6>{{statistics.ppendingReview}}</h6>
-									<span>个贷待审核</span>
-								</div>
-							</el-col>
-							<el-col :span="6">
-								<div class="grid-content bg-purple">
-									<h6>{{statistics.ppendingReturn}}</h6>
-									<span>个贷被退回</span>
-								</div>
-							</el-col>
-							<el-col :span="6">
-								<div class="grid-content bg-purple">
-									<h6>{{statistics.bpendingReview}}</h6>
-									<span>企贷待审核</span>
-								</div>
-							</el-col>
-							<el-col :span="6">
-								<div class="grid-content bg-purple">
-									<h6>{{statistics.bpendingReturn}}</h6>
-									<span>企贷被退回</span>
-								</div>
-							</el-col>
-						</el-row>
-						<template v-else>
-							<el-row :gutter="20">
-								<el-col :span="12">
-									<div class="grid-content bg-purple">
-										<h6>{{statistics.ppendingReview}}</h6>
-										<span>个贷待审核</span>
-									</div>
-								</el-col>
-								<el-col :span="12">
-									<div class="grid-content bg-purple">
-										<h6>{{statistics.ppendingReturn}}</h6>
-										<span>个贷被退回</span>
-									</div>
-								</el-col>
-							</el-row>
-							<el-row :gutter="20">
-								<el-col :span="12">
-									<div class="grid-content bg-purple">
-										<h6>{{statistics.bpendingReview}}</h6>
-										<span>企贷待审核</span>
-									</div>
-								</el-col>
-								<el-col :span="12">
-									<div class="grid-content bg-purple">
-										<h6>{{statistics.bpendingReturn}}</h6>
-										<span>企贷被退回</span>
-									</div>
-								</el-col>
-							</el-row>
-						</template>
 
-					</div>
-				</el-col>				
-			</el-row>
+			<el-tabs type="border-card">
+			  	<el-tab-pane label="待处理申请">
+
+					<el-row :gutter="20" class='zIndex9'>
+						<el-col :span="24">
+							<div class="home_apply">
+								<h3>待处理申请</h3>
+								<el-row :gutter="20">
+									<el-col :span="device === 'desktop'?6:12">
+										<div class="grid-content bg-purple">
+											<h6>{{statistics.ppendingReview}}</h6>
+											<span>个贷待审核</span>
+										</div>
+									</el-col>
+									<el-col :span="device === 'desktop'?6:12">
+										<div class="grid-content bg-purple">
+											<h6>{{statistics.ppendingReturn}}</h6>
+											<span>个贷被退回</span>
+										</div>
+									</el-col>
+									<el-col :span="device === 'desktop'?6:12">
+										<div class="grid-content bg-purple">
+											<h6>{{statistics.bpendingReview}}</h6>
+											<span>企贷待审核</span>
+										</div>
+									</el-col>
+									<el-col :span="device === 'desktop'?6:12">
+										<div class="grid-content bg-purple">
+											<h6>{{statistics.bpendingReturn}}</h6>
+											<span>企贷被退回</span>
+										</div>
+									</el-col>
+								</el-row>
+							</div>
+						</el-col>
+					</el-row>
+
+
+			  	</el-tab-pane>
+			  	<el-tab-pane label="补录待处理申请">
+
+			  		<el-row :gutter="20" class='zIndex9'>
+						<el-col :span="24">
+								<div class="home_apply">
+									<h3>补录待处理申请</h3>
+									<el-row :gutter="20" >
+										<el-col :span="device === 'desktop'?6:12">
+											<div class="grid-content bg-purple">
+												<h6>{{statistics.padded}}</h6>
+												<span>个贷待补录</span>
+											</div>
+										</el-col>
+										<el-col :span="device === 'desktop'?6:12">
+											<div class="grid-content bg-purple">
+												<h6>{{statistics.badded}}</h6>
+												<span>企贷待补录</span>
+											</div>
+										</el-col>
+									</el-row>
+								</div>
+							</el-col>
+						</el-col>
+					</el-row>
+
+			  	</el-tab-pane>
+			</el-tabs>
+
 		</div>
 		<div class="home_data" v-if="role==='first'">
 			<el-tabs type="border-card">
@@ -73,63 +77,32 @@
 						<el-col :span="24">
 							<div class="home_apply">
 								<h3>待处理申请</h3>
-								<el-row :gutter="20" v-if="device === 'desktop'">
-									<el-col :span="6">
+								<el-row :gutter="20">
+									<el-col :span="device === 'desktop'?6:12">
 										<div class="grid-content bg-purple">
 											<h6>{{statistics.ppendingReview}}</h6>
 											<span>个贷待审核</span>
 										</div>
 									</el-col>
-									<el-col :span="6">
+									<el-col :span="device === 'desktop'?6:12">
 										<div class="grid-content bg-purple">
 											<h6>{{statistics.ppendingReturn}}</h6>
 											<span>个贷被退回</span>
 										</div>
 									</el-col>
-									<el-col :span="6">
+									<el-col :span="device === 'desktop'?6:12">
 										<div class="grid-content bg-purple">
 											<h6>{{statistics.bpendingReview}}</h6>
 											<span>企贷待审核</span>
 										</div>
 									</el-col>
-									<el-col :span="6">
+									<el-col :span="device === 'desktop'?6:12">
 										<div class="grid-content bg-purple">
 											<h6>{{statistics.bpendingReturn}}</h6>
 											<span>企贷被退回</span>
 										</div>
 									</el-col>
 								</el-row>
-								<template  v-else>
-
-									<el-row :gutter="20">
-										<el-col :span="12">
-											<div class="grid-content bg-purple">
-												<h6>{{statistics.ppendingReview}}</h6>
-												<span>个贷待审核</span>
-											</div>
-										</el-col>
-										<el-col :span="12">
-											<div class="grid-content bg-purple">
-												<h6>{{statistics.ppendingReturn}}</h6>
-												<span>个贷被退回</span>
-											</div>
-										</el-col>
-									</el-row>
-									<el-row :gutter="20">
-										<el-col :span="12">
-											<div class="grid-content bg-purple">
-												<h6>{{statistics.bpendingReview}}</h6>
-												<span>企贷待审核</span>
-											</div>
-										</el-col>
-										<el-col :span="12">
-											<div class="grid-content bg-purple">
-												<h6>{{statistics.bpendingReturn}}</h6>
-												<span>企贷被退回</span>
-											</div>
-										</el-col>
-									</el-row>
-								</template>
 							</div>
 						</el-col>				
 					</el-row>
@@ -140,62 +113,32 @@
 						<el-col :span="24">
 								<div class="home_apply">
 									<h3>待处理申请</h3>
-									<el-row :gutter="20" v-if="device === 'desktop'">
-										<el-col :span="6">
+									<el-row :gutter="20" >
+										<el-col :span="device === 'desktop'?6:12">
 											<div class="grid-content bg-purple">
 												<h6>{{statistics.padded}}</h6>
 												<span>个贷待补录</span>
 											</div>
 										</el-col>
-										<el-col :span="6">
+										<el-col :span="device === 'desktop'?6:12">
 											<div class="grid-content bg-purple">
 												<h6>{{statistics.ptoBeProcessed}}</h6>
 												<span>个贷待处理</span>
 											</div>
 										</el-col>
-										<el-col :span="6">
+										<el-col :span="device === 'desktop'?6:12">
 											<div class="grid-content bg-purple">
 												<h6>{{statistics.badded}}</h6>
 												<span>企贷待补录</span>
 											</div>
 										</el-col>
-										<el-col :span="6">
+										<el-col :span="device === 'desktop'?6:12">
 											<div class="grid-content bg-purple">
 												<h6>{{statistics.btoBeProcessed}}</h6>
 												<span>企贷待处理</span>
 											</div>
 										</el-col>
 									</el-row>
-									<template v-else>
-										<el-row :gutter="20">
-											<el-col :span="12">
-												<div class="grid-content bg-purple">
-													<h6>{{statistics.padded}}</h6>
-													<span>个贷待补录</span>
-												</div>
-											</el-col>
-											<el-col :span="12">
-												<div class="grid-content bg-purple">
-													<h6>{{statistics.ptoBeProcessed}}</h6>
-													<span>个贷待处理</span>
-												</div>
-											</el-col>
-										</el-row>
-										<el-row :gutter="20">
-											<el-col :span="12">
-												<div class="grid-content bg-purple">
-													<h6>{{statistics.badded}}</h6>
-													<span>企贷待补录</span>
-												</div>
-											</el-col>
-											<el-col :span="12">
-												<div class="grid-content bg-purple">
-													<h6>{{statistics.btoBeProcessed}}</h6>
-													<span>企贷待处理</span>
-												</div>
-											</el-col>
-										</el-row>
-									</template>
 								</div>
 							</el-col>
 						</el-col>

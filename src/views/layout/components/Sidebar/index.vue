@@ -26,7 +26,7 @@ export default {
   components: { SidebarItem },
   data() {
     return {
-      title:'运营管理系统',
+      title:'e 融道小微金融助理系统',
     }
   },
   created(){
