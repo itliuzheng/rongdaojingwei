@@ -522,6 +522,11 @@
 	.el-input,.el-select,.el-cascader {
 			width: 200px
 	}
+	.mobile{
+		.el-input,.el-select,.el-cascader {
+			width: 100%
+		}
+	}
 	.el-form-item__error {
 		margin-left:60px
 	}

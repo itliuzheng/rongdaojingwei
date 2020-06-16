@@ -496,5 +496,11 @@
 			width: 200px
 		}
 	}
+
+	.mobile{
+		.el-input,.el-select,.el-cascader {
+			width: 100%
+		}
+	}
 	
 </style>

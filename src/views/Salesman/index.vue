@@ -374,7 +374,7 @@
 	}
 	</script>
 	
-	<style scoped="scoped">
+	<style scoped="scoped" lang="scss">
 		.el-col {
 			margin-bottom: 20px;
 		}
@@ -383,6 +383,11 @@
 		}
 		.el-dialog .el-input,.el-dialog .el-select {
 			width:200px
+		}
+		.mobile{
+			.el-input,.el-select,.el-cascader {
+				width: 100%
+			}
 		}
 	</style>
 	<style>

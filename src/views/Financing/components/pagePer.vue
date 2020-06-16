@@ -71,11 +71,11 @@
 				</el-table-column>
 				<el-table-column prop="productName" label="贷款产品" show-overflow-tooltip width="120"><!-- :formatter='formatterPro' -->
 				</el-table-column>
-				<el-table-column prop="amount" label="申请额度（万）" show-overflow-tooltip width="120">
+				<el-table-column prop="amount" label="申请额度(万)" show-overflow-tooltip width="120">
 				</el-table-column>
 				<el-table-column prop="useFunds" label="贷款用途" show-overflow-tooltip width="120">
 				</el-table-column>
-				<el-table-column prop="deadline" label="申请期限（月）" show-overflow-tooltip width="120">
+				<el-table-column prop="deadline" label="申请期限(月)" show-overflow-tooltip width="120">
 				</el-table-column>
 				<el-table-column prop="" label="操作" show-overflow-tooltip width="200" fixed="right">
 					<template slot-scope="scope">
@@ -156,7 +156,7 @@
 					productId: '', //贷款产品
 					amount: "", //申请的额度
 					registerAddress: "", //户籍
-					deadline: "", //申请期限（月）
+					deadline: "", //申请期限(月)
 					applyDate: null, //申请时间
 					dept: '', //公司部门
 					pageNum: 1, //当前页码
@@ -216,7 +216,7 @@
 						widthPart:24
 					},
 					{
-						label: '申请额度（万）:',
+						label: '申请额度(万):',
 						prop:'amount',
 						widthPart:24
 					},
@@ -226,7 +226,7 @@
 						widthPart:24
 					},
 					{
-						label: '申请期限（月）:',
+						label: '申请期限(月):',
 						prop:'deadline',
 						widthPart:24
 					},
@@ -359,7 +359,7 @@
 					productId: '', //贷款产品
 					amount: "", //申请的额度
 					useFunds: "", //资金用途
-					deadline: "", //申请期限（月）
+					deadline: "", //申请期限(月)
 					applyDate: "", //申请时间
 					dept: '', //公司部门
 					pageNum: 1, //当前页码
@@ -401,7 +401,7 @@
 	}
 </script>
 
-<style scoped="scoped">
+<style scoped="scoped" lang="scss">
 	.el-col {
 		margin-bottom: 20px;
 	}
@@ -410,5 +410,10 @@
 	}
 	.el-dialog .el-input,.el-dialog .el-select {
 		width:200px
+	}
+	.mobile{
+		.el-input,.el-select,.el-cascader {
+			width: 100%
+		}
 	}
 </style>

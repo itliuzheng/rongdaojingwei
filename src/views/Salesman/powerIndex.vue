@@ -97,10 +97,10 @@
 							</el-table-column>
 							<el-table-column prop="provider" label="产品提供方" show-overflow-tooltip width="">
 							</el-table-column>
-							<el-table-column prop="" label="额度范围（万）" show-overflow-tooltip :width="device === 'desktop'?'':'120'">
+							<el-table-column prop="" label="额度范围(万)" show-overflow-tooltip :width="device === 'desktop'?'':'120'">
 								<template slot-scope="scope">{{ scope.row.amountLower }}-{{ scope.row.amountUpper }}</template>
 							</el-table-column>
-							<el-table-column prop="" label="期限范围（月）" show-overflow-tooltip width="">
+							<el-table-column prop="" label="期限范围(月)" show-overflow-tooltip width="">
 								<template slot-scope="scope">{{ scope.row.deadlineLower }}-{{ scope.row.deadlineUpper }}</template>
 							</el-table-column>
 							<el-table-column prop="" label="利率范围(%/月)" show-overflow-tooltip width="">
@@ -132,10 +132,10 @@
 							</el-table-column>
 							<el-table-column prop="provider" label="产品提供方" show-overflow-tooltip width="">
 							</el-table-column>
-							<el-table-column prop="" label="额度范围（万）" show-overflow-tooltip :width="device === 'desktop'?'':'120'">
+							<el-table-column prop="" label="额度范围(万)" show-overflow-tooltip :width="device === 'desktop'?'':'120'">
 								<template slot-scope="scope">{{ scope.row.amountLower }}-{{ scope.row.amountUpper }}</template>
 							</el-table-column>
-							<el-table-column prop="" label="期限范围（月）" show-overflow-tooltip width="">
+							<el-table-column prop="" label="期限范围(月)" show-overflow-tooltip width="">
 								<template slot-scope="scope">{{ scope.row.deadlineLower }}-{{ scope.row.deadlineUpper }}</template>
 							</el-table-column>
 							<el-table-column prop="" label="利率范围(%/月)" show-overflow-tooltip width="">
@@ -400,12 +400,17 @@
 	}
 </script>
 
-<style scoped="scoped">
+<style scoped="scoped" lang="scss">
 	.el-col {
 		margin-bottom: 20px;
 	}
 
 	.el-dialog .el-input,.el-dialog .el-select {
 		width:200px
+	}
+	.mobile{
+		.el-input,.el-select,.el-cascader {
+			width: 100%
+		}
 	}
 </style>

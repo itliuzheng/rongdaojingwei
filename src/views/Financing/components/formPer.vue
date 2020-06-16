@@ -70,7 +70,7 @@
 				</el-form-item>
 			</el-col>
 			<el-col :span="device === 'desktop'?'12':'24'">
-				<el-form-item label="申请期限（月）" prop="deadline">
+				<el-form-item label="申请期限(月)" prop="deadline">
 					<el-input v-model="formData.deadline" disabled></el-input>
 				</el-form-item>
 			</el-col>		

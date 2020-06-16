@@ -122,7 +122,7 @@
 					productId:'',	//申请产品的id
 					amount:'',	//申请的额度
 					useFunds:'',	//资金用途
-					deadline:'',	//申请期限（月）
+					deadline:'',	//申请期限(月)
 					name:'',	//企业联系人/申请人姓名
 					mobile:'',	//申请人手机号/联系方式
 				}

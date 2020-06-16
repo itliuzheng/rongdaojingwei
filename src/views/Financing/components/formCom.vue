@@ -304,7 +304,7 @@
 	}
 </script>
 
-<style scoped="scoped">
+<style scoped="scoped" lang="scss">
 	.el-col {
 		margin-bottom: 20px;
 	}

@@ -46,11 +46,11 @@
                         <p class="fr">{{item.provider}}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
-                        <p class="fl">额度范围（万）:</p>
+                        <p class="fl">额度范围(万):</p>
                         <p class="fr">{{ item.amountLower }}-{{ item.amountUpper }}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >
-                        <p class="fl">期限范围（月）:</p>
+                        <p class="fl">期限范围(月):</p>
                         <p class="fr">{{ item.deadlineLower }}-{{ item.deadlineUpper }}</p>
                     </el-col>
                     <el-col :span="24" class="clearfix" >

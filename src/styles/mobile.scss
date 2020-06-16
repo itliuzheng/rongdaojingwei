@@ -24,6 +24,9 @@
     text-align: right;
     overflow-wrap:break-word;
   }
+  .el-input.is-disabled .el-input__inner{
+    color: #434242 !important;
+  }
 }
 .el-message-box{
   width: auto;

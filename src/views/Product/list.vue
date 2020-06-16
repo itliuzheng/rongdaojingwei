@@ -49,10 +49,10 @@
 				</el-table-column>
 				<el-table-column prop="provider" label="产品提供方" show-overflow-tooltip width="120">
 				</el-table-column>
-				<el-table-column prop="" label="额度范围（万）" show-overflow-tooltip width="120">
+				<el-table-column prop="" label="额度范围(万)" show-overflow-tooltip width="120">
 					<template slot-scope="scope">{{ scope.row.amountLower }}-{{ scope.row.amountUpper }}</template>
 				</el-table-column>
-				<el-table-column prop="" label="期限范围（月）" show-overflow-tooltip width="120">
+				<el-table-column prop="" label="期限范围(月)" show-overflow-tooltip width="120">
 					<template slot-scope="scope">{{ scope.row.deadlineLower }}-{{ scope.row.deadlineUpper }}</template>
 				</el-table-column>
 				<el-table-column prop="" label="利率范围(%/月)" show-overflow-tooltip width="120">
@@ -202,7 +202,7 @@
 					productId:'',	//申请产品的id
 					amount:'',	//申请的额度
 					useFunds:'',	//资金用途
-					deadline:'',	//申请期限（月）
+					deadline:'',	//申请期限(月)
 					name:'',	//企业联系人/申请人姓名
 					mobile:'',	//申请人手机号/联系方式
 				}
