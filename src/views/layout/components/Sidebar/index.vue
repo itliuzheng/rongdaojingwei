@@ -26,7 +26,7 @@ export default {
   components: { SidebarItem },
   data() {
     return {
-      title:'e 融道小微金融助理系统',
+      title:'e融道小微金融业务助理系统',
     }
   },
   created(){
@@ -55,7 +55,7 @@ export default {
 		vertical-align: middle;
 		line-height: 60px;
 		color:#ffffff;
-		font-size: 20px;
+		font-size: 18px;
 	}
 	.toMian:hover{
 		color:#ffffff

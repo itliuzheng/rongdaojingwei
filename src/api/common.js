@@ -190,5 +190,5 @@ export {
 	roleType,
 	imgUpUrl,
 	Wposition,
-	reviewStatus,
+	reviewStatus
 }

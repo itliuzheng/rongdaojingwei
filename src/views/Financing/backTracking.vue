@@ -6,14 +6,14 @@
 					<el-input v-model="filterData.number" placeholder="融资编号"></el-input>
 				</el-col>
 				<el-col :span="device === 'desktop'?'3':'12'">
-					<el-input v-model="filterData.manageName" placeholder="所属客户经理"></el-input>
+					<el-input v-model="filterData.manageName" placeholder="所属业务员"></el-input>
 				</el-col>
 				<el-col :span="device === 'desktop'?'3':'12'">
 					<el-input v-model="filterData.companyName" placeholder="企业名称"></el-input>
 				</el-col>
 				<el-col :span="device === 'desktop'?'3':'12'">
-					<el-select v-model="filterData.industry" placeholder="所属行业/职业">
-						<el-option v-for="item in job" :key="item.id" :label="item.name" :value="item.id">
+					<el-select v-model="filterData.industry" placeholder="所属行业">
+						<el-option v-for="item in job.industryList" :key="item.id" :label="item.name" :value="item.name">
 						</el-option>
 					</el-select>
 				</el-col>
@@ -26,9 +26,9 @@
 				<el-col :span="device === 'desktop'?'3':'12'">
 					<el-input v-model="filterData.amount" placeholder="申请额度(万)"></el-input>
 				</el-col>
-				<el-col :span="device === 'desktop'?'3':'12'">
-					<el-input v-model="filterData.useFunds" placeholder="资金用途"></el-input>
-				</el-col>
+				<!--<el-col :span="device === 'desktop'?'3':'12'">-->
+					<!--<el-input v-model="filterData.useFunds" placeholder="资金用途"></el-input>-->
+				<!--</el-col>-->
 				<el-col :span="device === 'desktop'?'4':'12'">
 					<el-input v-model="filterData.deadline" placeholder="申请期限（月）"></el-input>
 				</el-col>
@@ -57,7 +57,7 @@
 					</el-table-column>
 					<el-table-column prop="officeName" label="所属部门" show-overflow-tooltip width="120" v-if="userRole!='second'">
 					</el-table-column>
-					<el-table-column prop="manageName" label="所属客户经理" show-overflow-tooltip width="120">
+					<el-table-column prop="manageName" label="所属业务员" show-overflow-tooltip width="120">
 					</el-table-column>
 					<el-table-column prop="companyName" label="企业名称" show-overflow-tooltip>
 					</el-table-column>
@@ -116,7 +116,7 @@
 				<el-form ref='addFormCom' :label-position="labelPosition" :label-width="device === 'desktop'?'180px':'80px'" :model="formDataCom" :rules='ruleCom'>
 					<el-row :gutter="20">
 						<el-col :span="device === 'desktop'?'12':'24'">
-							<el-form-item label="所属客户经理" prop="manageName">
+							<el-form-item label="所属业务员" prop="manageName">
 								<el-input v-model="checkformDataCom.manageName" disabled></el-input><!-- :disabled="noEditCom"-->
 							</el-form-item>
 						</el-col>
@@ -158,10 +158,11 @@
 						</el-col>
 						<el-col :span="device === 'desktop'?'12':'24'">
 							<el-form-item label="所属行业" prop="industry">
-								<el-select v-model="checkformDataCom.industry" placeholder="所属行业/职业" disabled>
-									<el-option v-for="item in job" :key="item.id" :label="item.name" :value="item.id">
-									</el-option>
-								</el-select>
+								<el-input v-model="checkformDataCom.industry" disabled></el-input>
+								<!--<el-select v-model="checkformDataCom.industry" placeholder="所属行业/职业" disabled>-->
+									<!--<el-option v-for="item in job.industryList" :key="item.id" :label="item.name" :value="item.name">-->
+									<!--</el-option>-->
+								<!--</el-select>-->
 							</el-form-item>
 						</el-col>
 						<el-col :span="device === 'desktop'?'12':'24'">
@@ -293,17 +294,17 @@
 					<el-input v-model="filterDataPer.number" placeholder="融资编号"></el-input>
 				</el-col>
 				<el-col :span="device === 'desktop'?'3':'12'">
-					<el-input v-model="filterDataPer.manageName" placeholder="所属客户经理"></el-input>
+					<el-input v-model="filterDataPer.manageName" placeholder="所属业务员"></el-input>
 				</el-col>
 				<el-col :span="device === 'desktop'?'3':'12'">
 					<el-input v-model="filterDataPer.companyName" placeholder="姓名"></el-input>
 				</el-col>
-				<el-col :span="device === 'desktop'?'4':'12'">
-					<el-select v-model="filterDataPer.industry" placeholder="职业">
-						<el-option v-for="item in job" :key="item.id" :label="item.name" :value="item.id">
-						</el-option>
-					</el-select>
-				</el-col>
+				<!--<el-col :span="device === 'desktop'?'4':'12'">-->
+					<!--<el-select v-model="filterDataPer.industry" placeholder="职业">-->
+						<!--<el-option v-for="item in job.job" :key="item.id" :label="item.name" :value="item.id">-->
+						<!--</el-option>-->
+					<!--</el-select>-->
+				<!--</el-col>-->
 				<el-col :span="device === 'desktop'?'3':'12'">
 					<el-select v-model="filterDataPer.productId" placeholder="贷款产品">
 						<el-option v-for="item in proSelectData" :key="item.id" :label="item.name" :value="item.id">
@@ -334,8 +335,8 @@
 					</el-select>
 				</el-col>
 				<el-col :span="device === 'desktop'?'9':'24'">
-					<el-button type="primary" @click="query">查询</el-button>
-					<el-button type="success" @click="reset">重置</el-button>
+					<el-button type="primary" @click="queryPer">查询</el-button>
+					<el-button type="success" @click="resetPer">重置</el-button>
 				</el-col>
 			</el-row>
 
@@ -345,7 +346,7 @@
 					</el-table-column>
 					<el-table-column prop="officeName" label="部门" show-overflow-tooltip width="120" v-if="userRole!='second'">
 					</el-table-column>
-					<el-table-column prop="manageName" label="所属客户经理" show-overflow-tooltip width="120">
+					<el-table-column prop="manageName" label="所属业务员" show-overflow-tooltip width="120">
 					</el-table-column>
 					<el-table-column prop="name" label="姓名" show-overflow-tooltip>
 					</el-table-column>
@@ -603,7 +604,7 @@
 				checkformDataPer: {},
 				filterData: { //请求条件
 					number: '', //融资编号
-					manageName: '', //所属客户经理
+					manageName: '', //所属业务员
 					companyName: '', //企业名称
 					industry: '', //所属行业/职业
 					productId: '', //贷款产品
@@ -621,7 +622,7 @@
 				},
 				filterDataPer: { //请求条件
 					number: '', //融资编号
-					manageName: '', //所属客户经理
+					manageName: '', //所属业务员
 					companyName: '', //企业名称
 					industry: '', //所属行业/职业
 					productId: '', //贷款产品
@@ -899,7 +900,7 @@
 						widthPart:24
 					},
 					{
-						label: '所属客户经理:',
+						label: '所属业务员:',
 						prop:'manageName',
 						widthPart:24
 					},
@@ -990,7 +991,7 @@
 						widthPart:24
 					},
 					{
-						label: '所属客户经理:',
+						label: '所属业务员:',
 						prop:'manageName',
 						widthPart:24
 					},
@@ -1206,7 +1207,7 @@
 			reset() {
 				this.filterData = {
 					number: '', //融资编号
-					manageName: '', //所属客户经理
+					manageName: '', //所属业务员
 					companyName: '', //企业名称
 					industry: '', //所属行业/职业
 					productId: '', //贷款产品
@@ -1227,7 +1228,7 @@
 			resetPer() {
 				this.filterDataPer = {
 					number: '', //融资编号
-					manageName: '', //所属客户经理
+					manageName: '', //所属业务员
 					companyName: '', //企业名称
 					industry: '', //所属行业/职业
 					productId: '', //贷款产品

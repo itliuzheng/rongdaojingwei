@@ -187,7 +187,7 @@
 				fromList: true,//在列表页显示表单
 				checkOrEdit:1,//1 check   2 edit
 				addFromData: { //新增信息
-					manageName:'',	//所属客户经理
+					manageName:'',	//所属业务员
 					companyName:'',	//企业名称
 					socialCreditCode:'',	//社会统一信用代码
 					registeredCapital:'',	//注册资本

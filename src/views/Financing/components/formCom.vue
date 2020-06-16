@@ -3,7 +3,7 @@
 	<el-form ref='addForm' :label-position="labelPosition" :label-width="device === 'desktop'?'180px':'100px'" :model="addFormData"  :rules="addFromRules">
 		<el-row :gutter="20">
 			<el-col :span="device === 'desktop'?'12':'24'">
-				<el-form-item label="所属客户经理" prop="manageName">
+				<el-form-item label="所属业务员" prop="manageName">
 					<el-input v-model="formData.manageName" disabled></el-input>
 					 <!--:disabled="_lookOrReview===1"-->
 				</el-form-item>

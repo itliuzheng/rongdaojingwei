@@ -21,7 +21,7 @@
 		</el-pagination>
 		<el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
 			<el-form :label-position="labelPosition" label-width="80px" :model="addFromData">
-				<el-form-item label="所属客户经理">
+				<el-form-item label="所属业务员">
 					<el-input v-model="addFromData.manageName"></el-input>
 				</el-form-item>
 				<el-form-item label="企业名称">
@@ -107,7 +107,7 @@
 				dialogVisible:false,
 				labelPosition:'right',
 				addFromData: { //新增信息
-					manageName:'',	//所属客户经理
+					manageName:'',	//所属业务员
 					companyName:'',	//企业名称
 					socialCreditCode:'',	//社会统一信用代码
 					registeredCapital:'',	//注册资本

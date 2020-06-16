@@ -5,17 +5,17 @@
 				<el-input v-model="filterData.number" placeholder="融资编号"></el-input>
 			</el-col>
 			<el-col :span="device === 'desktop'?'4':'12'">
-				<el-input v-model="filterData.manageName" placeholder="所属客户经理"></el-input>
+				<el-input v-model="filterData.manageName" placeholder="所属业务员"></el-input>
 			</el-col>
 			<el-col :span="device === 'desktop'?'4':'12'">
 				<el-input v-model="filterData.name" placeholder="姓名"></el-input>
 			</el-col>
-			<el-col :span="device === 'desktop'?'4':'12'">
-				<el-select v-model="filterData.industry" placeholder="职业">
-					<el-option v-for="item in job" :key="item.id" :label="item.name" :value="item.id">
-					</el-option>
-				</el-select>
-			</el-col>
+			<!--<el-col :span="device === 'desktop'?'4':'12'">-->
+				<!--<el-select v-model="filterData.industry" placeholder="职业">-->
+					<!--<el-option v-for="item in job.job" :key="item.id" :label="item.name" :value="item.name">-->
+					<!--</el-option>-->
+				<!--</el-select>-->
+			<!--</el-col>-->
 			<el-col :span="device === 'desktop'?'4':'12'">
 				<el-select v-model="filterData.productId" placeholder="贷款产品">
 					<el-option v-for="item in proSelectData" :key="item.id" :label="item.name" :value="item.id">
@@ -25,9 +25,9 @@
 			<el-col :span="device === 'desktop'?'4':'12'">
 				<el-input v-model="filterData.amount" placeholder="申请额度(万)"></el-input>
 			</el-col>
-			<el-col :span="device === 'desktop'?'4':'12'">
-				<el-input v-model="filterData.mobile" placeholder="联系方式"></el-input>
-			</el-col>
+			<!--<el-col :span="device === 'desktop'?'4':'12'">-->
+				<!--<el-input v-model="filterData.mobile" placeholder="联系方式"></el-input>-->
+			<!--</el-col>-->
 			<el-col :span="device === 'desktop'?'4':'12'">
 				<el-input v-model="filterData.registerAddress" placeholder="户籍"></el-input>
 			</el-col>
@@ -57,7 +57,7 @@
 				</el-table-column>
 				<el-table-column prop="officeName" label="所属部门" show-overflow-tooltip width="120" v-if="userRole!='second'">
 				</el-table-column>
-				<el-table-column prop="manageName" label="所属客户经理" show-overflow-tooltip width="120">
+				<el-table-column prop="manageName" label="所属业务员" show-overflow-tooltip width="120">
 				</el-table-column>
 				<el-table-column prop="name" label="姓名" show-overflow-tooltip>
 				</el-table-column>
@@ -150,7 +150,7 @@
 				userRole:'',
 				filterData: { //请求条件
 					number: '', //融资编号
-					manageName: '', //所属客户经理
+					manageName: '', //所属业务员
 					name: '', //姓名
 					industry: '', //职业
 					productId: '', //贷款产品
@@ -181,7 +181,7 @@
 						widthPart:24
 					},
 					{
-						label: '所属客户经理:',
+						label: '所属业务员:',
 						prop:'manageName',
 						widthPart:24
 					},
@@ -353,7 +353,7 @@
 			reset() {
 				this.filterData = {
 					number: '', //融资编号
-					manageName: '', //所属客户经理
+					manageName: '', //所属业务员
 					companyName: '', //企业名称
 					industry: '', //所属行业/职业
 					productId: '', //贷款产品
