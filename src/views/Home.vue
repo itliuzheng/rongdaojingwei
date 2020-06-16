@@ -3,12 +3,12 @@
 		<div class="home_cont" v-if="role!='first'">
 
 			<el-tabs type="border-card">
-			  	<el-tab-pane label="待处理申请">
+			  	<el-tab-pane label="初审待处理申请">
 
 					<el-row :gutter="20" class='zIndex9'>
 						<el-col :span="24">
 							<div class="home_apply">
-								<h3>待处理申请</h3>
+								<h3>初审待处理申请</h3>
 								<el-row :gutter="20">
 									<el-col :span="device === 'desktop'?6:12">
 										<div class="grid-content bg-purple">
@@ -50,13 +50,13 @@
 									<el-row :gutter="20" >
 										<el-col :span="device === 'desktop'?6:12">
 											<div class="grid-content bg-purple">
-												<h6>{{statistics.padded}}</h6>
+												<h6>{{statistics.padded || 0}}</h6>
 												<span>个贷待补录</span>
 											</div>
 										</el-col>
 										<el-col :span="device === 'desktop'?6:12">
 											<div class="grid-content bg-purple">
-												<h6>{{statistics.badded}}</h6>
+												<h6>{{statistics.badded || 0}}</h6>
 												<span>企贷待补录</span>
 											</div>
 										</el-col>
